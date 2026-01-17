@@ -1,0 +1,18 @@
+# ==============================================
+# ZYBPAD ZPD1321 recovery.fstab
+# 基于fastboot getvar all的真实分区信息
+# ==============================================
+
+# 分区名    类型    设备路径                          挂载参数
+/boot           emmc  /dev/block/by-name/boot_b           flags=display="Boot";backup=1;slotselect
+/vendor_boot    emmc  /dev/block/by-name/vendor_boot_b    flags=display="Vendor Boot";backup=1;slotselect
+/super          emmc  /dev/block/by-name/super            flags=display="Super";backup=1;logical
+/system         ext4  /dev/block/mapper/system_b          flags=display="System";backup=1;mountfrom=/dev/block/by-name/super
+/vendor         ext4  /dev/block/mapper/vendor_b          flags=display="Vendor";backup=1;mountfrom=/dev/block/by-name/super
+/product        ext4  /dev/block/mapper/product_b         flags=display="Product";backup=1;mountfrom=/dev/block/by-name/super
+/system_ext     ext4  /dev/block/mapper/system_ext_b      flags=display="System Ext";backup=1;mountfrom=/dev/block/by-name/super
+/userdata       f2fs  /dev/block/by-name/userdata         flags=display="Data";encryptable=footer;backup=0
+/vbmeta         emmc  /dev/block/by-name/vbmeta_b         flags=display="VBMeta";backup=1;slotselect
+/dtbo           emmc  /dev/block/by-name/dtbo_b           flags=display="DTBO";backup=1;slotselect
+/misc           emmc  /dev/block/by-name/misc             flags=display="Misc";backup=1
+/metadata       emmc  /dev/block/by-name/metadata         flags=display="Metadata";backup=1
