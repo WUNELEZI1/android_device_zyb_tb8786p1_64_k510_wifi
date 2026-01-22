@@ -1,0 +1,7 @@
+{
+  "repository": {
+    "github": "WUNELEZI1/android_device_zyb_tb8786p1_64_k510_wifi"
+  },
+  "target_path": "device/zyb/tb8786p1_64_k510_wifi",
+  "branch": "main"
+}
