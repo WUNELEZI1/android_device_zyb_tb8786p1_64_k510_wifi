@@ -1,18 +1,44 @@
 # ==============================================
 # ZYBPAD ZPD1321 recovery.fstab
-# 基于fastboot getvar all的真实分区信息
+# 传统A/B分区，适配slotselect
 # ==============================================
 
-# 分区名    类型    设备路径                          挂载参数
-/boot           emmc  /dev/block/by-name/boot_b           flags=display="Boot";backup=1;slotselect
-/vendor_boot    emmc  /dev/block/by-name/vendor_boot_b    flags=display="Vendor Boot";backup=1;slotselect
-/super          emmc  /dev/block/by-name/super            flags=display="Super";backup=1;logical
-/system         ext4  /dev/block/mapper/system_b          flags=display="System";backup=1;mountfrom=/dev/block/by-name/super
-/vendor         ext4  /dev/block/mapper/vendor_b          flags=display="Vendor";backup=1;mountfrom=/dev/block/by-name/super
-/product        ext4  /dev/block/mapper/product_b         flags=display="Product";backup=1;mountfrom=/dev/block/by-name/super
-/system_ext     ext4  /dev/block/mapper/system_ext_b      flags=display="System Ext";backup=1;mountfrom=/dev/block/by-name/super
-/userdata       f2fs  /dev/block/by-name/userdata         flags=display="Data";encryptable=footer;backup=0
-/vbmeta         emmc  /dev/block/by-name/vbmeta_b         flags=display="VBMeta";backup=1;slotselect
-/dtbo           emmc  /dev/block/by-name/dtbo_b           flags=display="DTBO";backup=1;slotselect
-/misc           emmc  /dev/block/by-name/misc             flags=display="Misc";backup=1
-/metadata       emmc  /dev/block/by-name/metadata         flags=display="Metadata";backup=1
+# 核心引导分区
+/boot           emmc        /dev/block/by-name/boot           flags=display="Boot";backup=1;slotselect
+/vendor_boot    emmc        /dev/block/by-name/vendor_boot    flags=display="Vendor Boot";backup=1;slotselect
+
+# 超级分区（动态分区容器）
+/super          emmc        /dev/block/by-name/super          flags=display="Super";backup=1;logical
+
+# 动态分区（从super映射）- 使用slotselect自动选择当前槽位
+/system         ext4        /dev/block/mapper/system          flags=display="System";backup=1;slotselect;mountfrom=/dev/block/by-name/super
+/vendor         ext4        /dev/block/mapper/vendor          flags=display="Vendor";backup=1;slotselect;mountfrom=/dev/block/by-name/super
+/product        ext4        /dev/block/mapper/product         flags=display="Product";backup=1;slotselect;mountfrom=/dev/block/by-name/super
+/system_ext     ext4        /dev/block/mapper/system_ext      flags=display="System Ext";backup=1;slotselect;mountfrom=/dev/block/by-name/super
+
+# 数据分区
+/userdata       f2fs        /dev/block/by-name/userdata       flags=display="Data";encryptable=footer;length=-16384;backup=0
+
+# 元数据分区
+/metadata       ext4        /dev/block/by-name/metadata       flags=display="Metadata";backup=1;formattable
+
+# A/B分区元数据
+/misc           emmc        /dev/block/by-name/misc           flags=display="Misc";backup=1
+
+# AVB验证分区
+/vbmeta         emmc        /dev/block/by-name/vbmeta         flags=display="VBMeta";backup=1;slotselect
+/vbmeta_system  emmc        /dev/block/by-name/vbmeta_system  flags=backup=1;slotselect
+/vbmeta_vendor  emmc        /dev/block/by-name/vbmeta_vendor  flags=backup=1;slotselect
+
+# 设备树覆盖
+/dtbo           emmc        /dev/block/by-name/dtbo           flags=display="DTBO";backup=1;slotselect
+
+# 其他分区
+/cache          ext4        /dev/block/by-name/cache          flags=display="Cache";backup=1;wipeingui;canbewiped
+/persist        ext4        /dev/block/by-name/persist        flags=display="Persist";backup=1
+/frp            emmc        /dev/block/by-name/frp            flags=display="FRP";backup=1
+/nvram          emmc        /dev/block/by-name/nvram          flags=display="NVRAM";backup=1
+/nvdata         ext4        /dev/block/by-name/nvdata         flags=display="NVData";backup=1
+/nvcfg          ext4        /dev/block/by-name/nvcfg          flags=display="NVConfig";backup=1
+/protect1       ext4        /dev/block/by-name/protect1       flags=display="Protect1";backup=1
+/protect2       ext4        /dev/block/by-name/protect2       flags=display="Protect2";backup=1

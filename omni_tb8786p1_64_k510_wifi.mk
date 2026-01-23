@@ -1,17 +1,24 @@
-# ==============================================
-# ZYBPAD ZPD1321 设备定义
-# ==============================================
-$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
-$(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/BoardConfig.mk)
+# 继承TWRP产品配置
+$(call inherit-product, vendor/twrp/config/common.mk)
 
-# 设备标识（和你的fastboot日志一致）
-PRODUCT_NAME := omni_tb8786p1_64_k510_wifi
+# 继承设备配置
+$(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/device.mk)
+
+# 设备信息
 PRODUCT_DEVICE := tb8786p1_64_k510_wifi
+PRODUCT_NAME := omni_tb8786p1_64_k510_wifi
 PRODUCT_BRAND := ZYB
 PRODUCT_MODEL := ZPD1321
 PRODUCT_MANUFACTURER := ZYB
 
-# Recovery特性
-PRODUCT_COPY_FILES += \
-    device/zyb/tb8786p1_64_k510_wifi/recovery.fstab:root/etc/recovery.fstab
+# 编译类型
+PRODUCT_BUILD_PROP_OVERRIDES += \
+    PRODUCT_NAME=tb8786p1_64_k510_wifi \
+    TARGET_DEVICE=tb8786p1_64_k510_wifi
+
+# 版本信息
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.twrp.device=tb8786p1_64_k510_wifi \
+    ro.twrp.board=mt6768 \
+    ro.twrp.platform=mt6768 \
+    ro.twrp.version=$(shell date +%Y%m%d)
