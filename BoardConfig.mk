@@ -10,30 +10,11 @@ DEVICE_PATH := device/zyb/tb8786p1_64_k510_wifi
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
 
-# ========== A/B 分区配置 ==========
-AB_OTA_UPDATER := true
-BOARD_USES_VIRTUAL_AB := false  # 传统A/B，不是虚拟A/B
-
-# ❗ 关键修正：仅包含有槽位且属于OTA范围的分区
-AB_OTA_PARTITIONS := \
-    boot \
-    vendor_boot \
-    dtbo \
-    init_boot \
-    vbmeta \
-    vbmeta_system \
-    vbmeta_vendor
-
-# vendor_boot架构配置
-BOARD_USES_RECOVERY_AS_BOOT := false
-BOARD_BUILD_VENDOR_BOOT_IMAGE := true
-BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
-BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
-TARGET_NO_RECOVERY := true
-
-# MTK传统A/B设备需要
-BOARD_USES_MTK_BOOTCTL := true
-BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
+# ========== 平台配置（必须先定义）==========
+TARGET_BOARD_PLATFORM := mt6768
+BOARD_HAS_MTK_HARDWARE := true
+MTK_PLATFORM := mt6768
+TARGET_CPU_SMP := true
 
 # ========== 架构配置 ==========
 TARGET_ARCH := arm64
@@ -45,7 +26,7 @@ TARGET_CPU_VARIANT_RUNTIME := cortex-a53
 TARGET_SUPPORTS_64_BIT_APPS := true
 
 TARGET_2ND_ARCH := arm
-TARGET_2ND_ARCH_VARIANT := armv8-a  # ✅ 保持 armv8-a，不要改为 armv7-a-neon
+TARGET_2ND_ARCH_VARIANT := armv8-a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := cortex-a53
@@ -57,6 +38,34 @@ OVERRIDE_TARGET_FLATTEN_APEX := true
 # ========== Bootloader ==========
 TARGET_BOOTLOADER_BOARD_NAME := tb8786p1_64_k510_wifi
 TARGET_NO_BOOTLOADER := true
+
+# ========== A/B 分区配置 ==========
+AB_OTA_UPDATER := true
+BOARD_USES_VIRTUAL_AB := false
+BOARD_USES_MTK_BOOTCTL := true
+BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
+
+# ❗ 关键修正：AB_OTA_PARTITIONS 必须正确定义
+AB_OTA_PARTITIONS := \
+    boot \
+    vendor_boot \
+    dtbo \
+    init_boot \
+    vbmeta \
+    vbmeta_system \
+    vbmeta_vendor
+
+# ========== vendor_boot架构配置（关键修正）==========
+# ❗ 必须放在 platform 和 A/B 配置之后
+BOARD_BUILD_VENDOR_BOOT_IMAGE := true
+BOARD_VENDOR_RAMDISK_USES_LZ4 := true
+BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
+TARGET_NO_RECOVERY := true
+BOARD_USES_RECOVERY_AS_BOOT := false
+
+# ❗ 关键修正：只有在 BOARD_BUILD_VENDOR_BOOT_IMAGE 被识别后才能设置这些
+BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 
 # ========== 显示配置 ==========
 TARGET_SCREEN_DENSITY := 280
@@ -118,12 +127,6 @@ TARGET_COPY_OUT_SYSTEM_EXT := system_ext
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
-# ========== 平台配置 ==========
-TARGET_BOARD_PLATFORM := mt6768
-BOARD_HAS_MTK_HARDWARE := true
-MTK_PLATFORM := mt6768
-TARGET_CPU_SMP := true
-
 # ========== Recovery配置 ==========
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
@@ -167,7 +170,3 @@ TW_INCLUDE_LIBRESETPROP := true
 # 调试
 TARGET_USES_LOGD := true
 TWRP_INCLUDE_LOGCAT := true
-
-# vendor_boot额外配置
-BOARD_VENDOR_RAMDISK_USES_LZ4 := true
-BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
