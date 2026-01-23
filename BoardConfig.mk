@@ -96,8 +96,8 @@ BOARD_VENDOR_RAMDISK_USES_LZ4 := true
 BOARD_USES_RECOVERY_AS_BOOT := true
 TARGET_NO_RECOVERY := true
 
-# 关键修复：告诉编译系统我们确实要构建vendor_boot
-TARGET_NO_VENDOR_BOOT := false
+# 关键修复：告诉编译系统我们确实要构建vendor_boot (使用新变量替代过时的TARGET_NO_VENDOR_BOOT)
+PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
 BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
 
 # AVB（设备已解锁）
