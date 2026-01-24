@@ -21,8 +21,8 @@ TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 := 
-TARGET_CPU_VARIANT := cortex-a53
-TARGET_CPU_VARIANT_RUNTIME := cortex-a53
+TARGET_CPU_VARIANT := cortex-a73  # 修正：MT6768使用A73+A53
+TARGET_CPU_VARIANT_RUNTIME := cortex-a73
 TARGET_SUPPORTS_64_BIT_APPS := true
 
 TARGET_2ND_ARCH := arm
@@ -62,10 +62,10 @@ BOARD_USES_RECOVERY_AS_BOOT := false
 BOARD_VENDOR_RAMDISK_USES_LZ4 := true
 TARGET_NO_RECOVERY := true
 
-# ❗ 关键修正：先注释掉这些，让编译通过
-# BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
-# BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
-# BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
+# ❗ 关键修复：必须启用这些配置才能生成vendor_boot.img
+BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
 
 # ========== 显示配置 ==========
 TARGET_SCREEN_DENSITY := 280
@@ -86,16 +86,20 @@ BOARD_KERNEL_OFFSET := 0x00008000
 BOARD_RAMDISK_OFFSET := 0x11000000
 BOARD_KERNEL_TAGS_OFFSET := 0x13f00000
 
-BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
-BOARD_MKBOOTIMG_ARGS += --kernel_offset $(BOARD_KERNEL_OFFSET)
-BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
-BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
-BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
+# 关键：必须定义这些参数才能正确构建boot/vendor_boot镜像
+BOARD_MKBOOTIMG_ARGS := \
+    --header_version $(BOARD_BOOTIMG_HEADER_VERSION) \
+    --kernel_offset $(BOARD_KERNEL_OFFSET) \
+    --ramdisk_offset $(BOARD_RAMDISK_OFFSET) \
+    --tags_offset $(BOARD_KERNEL_TAGS_OFFSET) \
+    --dtb $(TARGET_PREBUILT_DTB)
 
-# 移除可能导致冲突的配置
-# BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
-# BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-# BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive buildvariant=user
+# ❗ 关键：添加内核命令行（根据你的boot.img解包信息）
+BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive buildvariant=user
+
+# 内核镜像名称
+BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
+BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 
 # ========== 分区配置 ==========
 BOARD_FLASH_BLOCK_SIZE := 4096  # (BOARD_KERNEL_PAGESIZE)
@@ -138,6 +142,14 @@ BOARD_SUPPORTS_FLASH_FROM_STORAGE := true
 BOARD_RECOVERY_SWIPE := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_HAS_FLIPPED_SCREEN := false
+
+# ========== TWRP Recovery 构建目标配置 ==========
+# ❗ 关键：告诉构建系统这是TWRP设备
+TARGET_RECOVERY_DEVICE_MODULES += \
+    android.hardware.boot@1.2-service.oplus \
+    libandroidicu \
+    libion \
+    libxml2
 
 # ========== 安全补丁 ==========
 PLATFORM_SECURITY_PATCH := 2099-12-31

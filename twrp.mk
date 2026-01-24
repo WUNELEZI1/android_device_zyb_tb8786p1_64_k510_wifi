@@ -1,0 +1,1 @@
+$(call inherit-product, vendor/twrp/config/common.mk)
