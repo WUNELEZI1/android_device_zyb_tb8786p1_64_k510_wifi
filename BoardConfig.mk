@@ -154,3 +154,14 @@ TW_DEBUG := false
 # 强制构建 Recovery 镜像
 TARGET_BUILD_RECOVERY_IMAGE := true
 TARGET_RECOVERY_DEVICE_DIR := $(DEVICE_PATH)
+
+# ========== 关键修复：解决 splash.xml 缺失问题 ==========
+TW_SPLASH_PATH := none
+TW_SKIP_SPLASH_IMAGE := true
+
+# ========== 修复只读变量冲突 ==========
+BOARD_SEPOLICY_DIRS := \
+    $(DEVICE_PATH)/sepolicy \
+    device/qcom/sepolicy
+SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS := $(BOARD_PLAT_PUBLIC_SEPOLICY_DIR)
+SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS := $(BOARD_PLAT_PRIVATE_SEPOLICY_DIR)
