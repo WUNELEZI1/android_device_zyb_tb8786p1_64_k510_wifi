@@ -10,7 +10,7 @@ DEVICE_PATH := device/zyb/tb8786p1_64_k510_wifi
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
 
-# ========== 平台配置（必须先定义）==========
+# ========== 平台配置 ==========
 TARGET_BOARD_PLATFORM := mt6768
 BOARD_HAS_MTK_HARDWARE := true
 MTK_PLATFORM := mt6768
@@ -21,7 +21,7 @@ TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 := 
-TARGET_CPU_VARIANT := cortex-a73  # 修正：MT6768使用A73+A53
+TARGET_CPU_VARIANT := cortex-a73
 TARGET_CPU_VARIANT_RUNTIME := cortex-a73
 TARGET_SUPPORTS_64_BIT_APPS := true
 
@@ -45,7 +45,7 @@ BOARD_USES_VIRTUAL_AB := false
 BOARD_USES_MTK_BOOTCTL := true
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
 
-# ❗ 关键修正：AB_OTA_PARTITIONS 必须正确定义
+# A/B 分区列表
 AB_OTA_PARTITIONS := \
     boot \
     vendor_boot \
@@ -55,40 +55,26 @@ AB_OTA_PARTITIONS := \
     vbmeta_system \
     vbmeta_vendor
 
-# ========== vendor_boot架构配置（关键修复）==========
-# ❗ 关键：先声明我们要构建vendor_boot
-BOARD_BUILD_VENDOR_BOOT_IMAGE := true
-BOARD_USES_RECOVERY_AS_BOOT := false
-BOARD_VENDOR_RAMDISK_USES_LZ4 := true
-TARGET_NO_RECOVERY := true
-
-# ❗ 关键修复：使用条件检查，确保只在构建vendor_boot时设置
-ifeq ($(BOARD_BUILD_VENDOR_BOOT_IMAGE),true)
-BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
-BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
-BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
-endif
-
 # ========== 显示配置 ==========
 TARGET_SCREEN_DENSITY := 280
 
 # ========== 内核配置 ==========
-# ❗ 关键修复：禁用内核编译，使用预编译内核
-TARGET_NO_KERNEL := true
+# 使用预编译内核
 TARGET_FORCE_PREBUILT_KERNEL := true
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/dtb/mt6768.dtb
 
-# 基础参数
+# 引导镜像参数
 BOARD_BOOTIMG_HEADER_VERSION := 4
-BOARD_VENDOR_BOOT_HEADER_VERSION := 4
 BOARD_KERNEL_BASE := 0x40078000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_OFFSET := 0x00008000
 BOARD_RAMDISK_OFFSET := 0x11000000
 BOARD_KERNEL_TAGS_OFFSET := 0x13f00000
+BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive buildvariant=user
+BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
+BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 
-# 关键：必须定义这些参数才能正确构建boot/vendor_boot镜像
 BOARD_MKBOOTIMG_ARGS := \
     --header_version $(BOARD_BOOTIMG_HEADER_VERSION) \
     --kernel_offset $(BOARD_KERNEL_OFFSET) \
@@ -96,26 +82,19 @@ BOARD_MKBOOTIMG_ARGS := \
     --tags_offset $(BOARD_KERNEL_TAGS_OFFSET) \
     --dtb $(TARGET_PREBUILT_DTB)
 
-# ❗ 关键：添加内核命令行（根据你的boot.img解包信息）
-BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive buildvariant=user
-
-# 内核镜像名称
-BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
-BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-
 # ========== 分区配置 ==========
-BOARD_FLASH_BLOCK_SIZE := 4096  # (BOARD_KERNEL_PAGESIZE)
+BOARD_FLASH_BLOCK_SIZE := 4096
 
-# 分区大小（基于fastboot getvar all真实数据）
-BOARD_BOOTIMAGE_PARTITION_SIZE := 33554432        # 32MB (0x2000000)
-BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864 # 64MB (0x4000000)
-BOARD_DTBOIMG_PARTITION_SIZE := 8388608           # 8MB (0x800000)
-BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE := 8388608   # 8MB (0x800000)
-BOARD_VBMETAIMAGE_PARTITION_SIZE := 8388608       # 8MB (0x800000)
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 238418575360 # 222GB (0x37814F8000)
+# 分区大小
+BOARD_BOOTIMAGE_PARTITION_SIZE := 33554432
+BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864
+BOARD_DTBOIMG_PARTITION_SIZE := 8388608
+BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE := 8388608
+BOARD_VBMETAIMAGE_PARTITION_SIZE := 8388608
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 238418575360
 
-# 动态分区（super分区）
-BOARD_SUPER_PARTITION_SIZE := 10737418240         # 10GB (0x280000000)
+# 动态分区配置
+BOARD_SUPER_PARTITION_SIZE := 10737418240
 BOARD_SUPER_PARTITION_GROUPS := zyb_dynamic_partitions
 BOARD_ZYB_DYNAMIC_PARTITIONS_SIZE := 10737418240
 BOARD_ZYB_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product system_ext
@@ -136,7 +115,7 @@ TARGET_COPY_OUT_SYSTEM_EXT := system_ext
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
-# ========== Recovery配置 ==========
+# ========== Recovery 配置 ==========
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
 RECOVERY_SDCARD_ON_DATA := true
@@ -145,14 +124,6 @@ BOARD_RECOVERY_SWIPE := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_HAS_FLIPPED_SCREEN := false
 
-# ========== TWRP Recovery 构建目标配置 ==========
-# ❗ 关键：告诉构建系统这是TWRP设备
-TARGET_RECOVERY_DEVICE_MODULES += \
-    android.hardware.boot@1.2-service.oplus \
-    libandroidicu \
-    libion \
-    libxml2
-
 # ========== 安全补丁 ==========
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
@@ -160,9 +131,8 @@ PLATFORM_VERSION := 12.0.0
 
 # ========== Verified Boot ==========
 BOARD_AVB_ENABLE := false
-BOARD_AVB_MAKE_VBMETA_IMAGE := false
 
-# ========== TWRP Configuration ==========
+# ========== TWRP 配置 ==========
 TW_THEME := portrait_hdpi
 TW_EXTRA_LANGUAGES := true
 TW_DEFAULT_LANGUAGE := zh_CN
