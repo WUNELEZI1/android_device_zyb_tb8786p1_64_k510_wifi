@@ -39,18 +39,6 @@ OVERRIDE_TARGET_FLATTEN_APEX := true
 TARGET_BOOTLOADER_BOARD_NAME := tb8786p1_64_k510_wifi
 TARGET_NO_BOOTLOADER := true
 
-# ========== vendor_boot架构配置（关键：必须放在最前面）==========
-# ❗ 核心修复：这些配置必须在任何检查之前定义
-BOARD_BUILD_VENDOR_BOOT_IMAGE := true
-BOARD_USES_RECOVERY_AS_BOOT := false
-BOARD_VENDOR_RAMDISK_USES_LZ4 := true
-TARGET_NO_RECOVERY := true
-
-# 必须在 BOARD_BUILD_VENDOR_BOOT_IMAGE := true 之后定义
-BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
-BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
-BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
-
 # ========== A/B 分区配置 ==========
 AB_OTA_UPDATER := true
 BOARD_USES_VIRTUAL_AB := false
@@ -66,6 +54,20 @@ AB_OTA_PARTITIONS := \
     vbmeta \
     vbmeta_system \
     vbmeta_vendor
+
+# ========== vendor_boot架构配置（关键修复）==========
+# ❗ 关键：先声明我们要构建vendor_boot
+BOARD_BUILD_VENDOR_BOOT_IMAGE := true
+BOARD_USES_RECOVERY_AS_BOOT := false
+BOARD_VENDOR_RAMDISK_USES_LZ4 := true
+TARGET_NO_RECOVERY := true
+
+# ❗ 关键修复：使用条件检查，确保只在构建vendor_boot时设置
+ifeq ($(BOARD_BUILD_VENDOR_BOOT_IMAGE),true)
+BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
+endif
 
 # ========== 显示配置 ==========
 TARGET_SCREEN_DENSITY := 280
