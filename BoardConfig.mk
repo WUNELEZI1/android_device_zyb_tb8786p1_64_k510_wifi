@@ -7,14 +7,16 @@
 
 DEVICE_PATH := device/zyb/tb8786p1_64_k510_wifi
 
-# For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
 
-# ========== 平台配置 ==========
+# ========== 设备专属平台配置 ==========
 TARGET_BOARD_PLATFORM := mt6768
 BOARD_HAS_MTK_HARDWARE := true
 MTK_PLATFORM := mt6768
 TARGET_CPU_SMP := true
+# 平板设备：禁用蓝牙/蜂窝相关配置（WiFi版）
+BOARD_HAS_NO_BLUETOOTH := true
+BOARD_HAS_NO_MOBILE_DATA := true
 
 # ========== 架构配置 ==========
 TARGET_ARCH := arm64
@@ -39,61 +41,56 @@ OVERRIDE_TARGET_FLATTEN_APEX := true
 TARGET_BOOTLOADER_BOARD_NAME := tb8786p1_64_k510_wifi
 TARGET_NO_BOOTLOADER := true
 
-# ========== A/B 分区配置 ==========
-AB_OTA_UPDATER := true
+# ========== 关键：平板 A/B 分区禁用 ==========
+AB_OTA_UPDATER := false
 BOARD_USES_VIRTUAL_AB := false
-BOARD_USES_MTK_BOOTCTL := true
+BOARD_USES_MTK_BOOTCTL := false
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
 
-# A/B 分区列表
-AB_OTA_PARTITIONS := \
-    boot \
-    vendor_boot \
-    dtbo \
-    init_boot \
-    vbmeta \
-    vbmeta_system \
-    vbmeta_vendor
-
-# ========== 显示配置 ==========
+# ========== 平板显示配置 ==========
 TARGET_SCREEN_DENSITY := 280
+# 补充平板常见分辨率（根据你的设备实际屏幕修改）
+TW_SCREEN_WIDTH := 1200
+TW_SCREEN_HEIGHT := 1920
+# 平板横屏/竖屏适配
+TW_ROTATE_SCREEN := false
+TW_DEFAULT_ORIENTATION := portrait
+TW_CUSTOM_ROTATION := 0
 
-# ========== 内核配置 ==========
-# 使用预编译内核
+# ========== 内核配置（设备专属预编译路径） ==========
 TARGET_FORCE_PREBUILT_KERNEL := true
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/dtb/mt6768.dtb
-
-# 引导镜像参数
-BOARD_BOOTIMG_HEADER_VERSION := 4
+# MTK 平板内核参数补充
 BOARD_KERNEL_BASE := 0x40078000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_OFFSET := 0x00008000
 BOARD_RAMDISK_OFFSET := 0x11000000
 BOARD_KERNEL_TAGS_OFFSET := 0x13f00000
-BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive buildvariant=user
+BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 androidboot.selinux=permissive androidboot.hardware=mt6768 buildvariant=user
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 
 BOARD_MKBOOTIMG_ARGS := \
-    --header_version $(BOARD_BOOTIMG_HEADER_VERSION) \
+    --header_version 4 \
     --kernel_offset $(BOARD_KERNEL_OFFSET) \
     --ramdisk_offset $(BOARD_RAMDISK_OFFSET) \
     --tags_offset $(BOARD_KERNEL_TAGS_OFFSET) \
     --dtb $(TARGET_PREBUILT_DTB)
 
-# ========== 分区配置 ==========
+# ========== 分区配置（设备实际大小） ==========
 BOARD_FLASH_BLOCK_SIZE := 4096
-
-# 分区大小
 BOARD_BOOTIMAGE_PARTITION_SIZE := 33554432
 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_DTBOIMG_PARTITION_SIZE := 8388608
 BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE := 8388608
 BOARD_VBMETAIMAGE_PARTITION_SIZE := 8388608
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 238418575360
+# Recovery 分区（平板专属大小）
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 67108864
+BOARD_RECOVERYIMAGE_FILE_SYSTEM_TYPE := ext4
 
-# 动态分区配置
+# 动态分区（平板默认配置）
 BOARD_SUPER_PARTITION_SIZE := 10737418240
 BOARD_SUPER_PARTITION_GROUPS := zyb_dynamic_partitions
 BOARD_ZYB_DYNAMIC_PARTITIONS_SIZE := 10737418240
@@ -101,21 +98,18 @@ BOARD_ZYB_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product system_ext
 BOARD_BUILD_SUPER_IMAGE_BY_DEFAULT := true
 
 # 文件系统
-BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_SYSTEMIMAGE_PARTITION_TYPE := ext4
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
-
 TARGET_COPY_OUT_VENDOR := vendor
 TARGET_COPY_OUT_PRODUCT := product
 TARGET_COPY_OUT_SYSTEM_EXT := system_ext
-
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
-# ========== Recovery 配置 ==========
+# ========== Recovery 核心配置 ==========
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
 RECOVERY_SDCARD_ON_DATA := true
@@ -123,6 +117,9 @@ BOARD_SUPPORTS_FLASH_FROM_STORAGE := true
 BOARD_RECOVERY_SWIPE := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_HAS_FLIPPED_SCREEN := false
+# 禁用 AOSP Recovery，强制 TWRP
+TARGET_NO_RECOVERY := false
+BOARD_USES_RECOVERY_AS_BOOT := false
 
 # ========== 安全补丁 ==========
 PLATFORM_SECURITY_PATCH := 2099-12-31
@@ -132,7 +129,7 @@ PLATFORM_VERSION := 12.0.0
 # ========== Verified Boot ==========
 BOARD_AVB_ENABLE := false
 
-# ========== TWRP 配置 ==========
+# ========== TWRP 平板专属配置 ==========
 TW_THEME := portrait_hdpi
 TW_EXTRA_LANGUAGES := true
 TW_DEFAULT_LANGUAGE := zh_CN
@@ -143,17 +140,17 @@ TW_INCLUDE_REPACKTOOLS := true
 TW_MAX_BRIGHTNESS := 255
 TW_DEFAULT_BRIGHTNESS := 150
 TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
-
-# 功能支持
-TW_INCLUDE_FUSE_EXFAT := true
-TW_INCLUDE_FUSE_NTFS := true
-TW_INCLUDE_CRYPTO := true
-TW_INCLUDE_CRYPTO_FBE := true
-TW_INCLUDE_RESETPROP := true
-TW_EXCLUDE_DEFAULT_USB_INIT := true
-TW_INCLUDE_NTFS_3G := true
-TW_INCLUDE_LIBRESETPROP := true
-
+# MTK 平板特有配置
+TW_MTK := true
+TW_NO_REBOOT_BOOTLOADER := true
+TW_INCLUDE_NV_DATA_BACKUP := true
+TW_IGNORE_MAJOR_AXIS_0 := true
+# WiFi 平板：禁用蜂窝相关功能
+TW_EXCLUDE_CELLULAR := true
 # 调试
 TARGET_USES_LOGD := true
 TWRP_INCLUDE_LOGCAT := true
+TW_DEBUG := false
+# 强制构建 Recovery 镜像
+TARGET_BUILD_RECOVERY_IMAGE := true
+TARGET_RECOVERY_DEVICE_DIR := $(DEVICE_PATH)
