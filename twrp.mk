@@ -22,3 +22,8 @@ TW_DISABLE_PRODUCT_VAR_ASSIGN := true
 TW_MTK := true
 TW_MTK_DEVICE := true
 TW_INCLUDE_MTK_APDB := true
+
+# ========== –ﬁ∏¥÷ª∂¡±‰¡ø≥ÂÕª ==========
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.twrp.version=3.7.0-zyb \
+    ro.twrp.build.date=$(shell date +%Y%m%d)

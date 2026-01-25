@@ -1,49 +1,15 @@
-# ==============================================
-# ZYBPAD ZPD1321 (tb8786p1_64_k510_wifi) recovery.fstab
-# 基于fastboot getvar all真实数据
-# 传统A/B分区，适配slotselect
-# ==============================================
+# tb8786p1_64_k510_wifi recovery.fstab
+# 基于fastboot getvar all生成
 
-# ========== 引导分区（A/B槽位） ==========
-/boot           emmc        /dev/block/by-name/boot           flags=display="Boot";backup=1;slotselect
-/vendor_boot    emmc        /dev/block/by-name/vendor_boot    flags=display="Vendor Boot";backup=1;slotselect
-/init_boot      emmc        /dev/block/by-name/init_boot      flags=display="Init Boot";backup=1;slotselect
-/dtbo           emmc        /dev/block/by-name/dtbo           flags=display="DTBO";backup=1;slotselect
-
-# ========== 超级分区（动态分区容器） ==========
-/super          emmc        /dev/block/by-name/super          flags=display="Super";backup=1
-
-# ========== 动态分区（从super映射） ==========
-/system         ext4        /dev/block/mapper/system          flags=display="System";backup=1;slotselect
-/vendor         ext4        /dev/block/mapper/vendor          flags=display="Vendor";backup=1;slotselect
-/product        ext4        /dev/block/mapper/product         flags=display="Product";backup=1;slotselect
-/system_ext     ext4        /dev/block/mapper/system_ext      flags=display="System Ext";backup=1;slotselect
-
-# ========== 数据分区 ==========
-/userdata       f2fs        /dev/block/by-name/userdata       flags=display="Data";encryptable=footer;length=-16384;backup=0
-
-# ========== 元数据分区（可能包含缓存） ==========
-/metadata       emmc        /dev/block/by-name/metadata       flags=display="Metadata";backup=1;formattable;wipeingui
-
-# ========== A/B分区管理 ==========
-/misc           emmc        /dev/block/by-name/misc           flags=display="Misc";backup=1
-
-# ========== AVB验证分区 ==========
-/vbmeta         emmc        /dev/block/by-name/vbmeta         flags=display="VBMeta";backup=1;slotselect
-/vbmeta_system  emmc        /dev/block/by-name/vbmeta_system  flags=backup=1;slotselect
-/vbmeta_vendor  emmc        /dev/block/by-name/vbmeta_vendor  flags=backup=1;slotselect
-
-# ========== NVRAM相关分区 ==========
-/nvram          emmc        /dev/block/by-name/nvram          flags=display="NVRAM";backup=1
-/nvdata         ext4        /dev/block/by-name/nvdata         flags=display="NVData";backup=1
-/nvcfg          ext4        /dev/block/by-name/nvcfg          flags=display="NVConfig";backup=1
-
-# ========== 保护分区 ==========
-/protect1       ext4        /dev/block/by-name/protect1       flags=display="Protect1";backup=1
-/protect2       ext4        /dev/block/by-name/protect2       flags=display="Protect2";backup=1
-
-# ========== 其他分区 ==========
-/frp            emmc        /dev/block/by-name/frp            flags=display="FRP";backup=1
-/para           emmc        /dev/block/by-name/para           flags=display="Para";backup=1
-/seccfg         emmc        /dev/block/by-name/seccfg         flags=display="SecConfig";backup=1
-
+/boot           emmc        /dev/block/bootdevice/by-name/boot_a        flags=display="Boot";backup=1;flashimg=1
+/boot_b         emmc        /dev/block/bootdevice/by-name/boot_b        flags=display="Boot_b";backup=1;flashimg=1
+/vendor_boot    emmc        /dev/block/bootdevice/by-name/vendor_boot_a flags=display="Vendor_Boot";backup=1;flashimg=1
+/vendor_boot_b  emmc        /dev/block/bootdevice/by-name/vendor_boot_b flags=display="Vendor_Boot_b";backup=1;flashimg=1
+/system         ext4        /dev/block/mapper/system_b                 flags=display="System";backup=1;mountable=1
+/vendor         ext4        /dev/block/mapper/vendor_b                 flags=display="Vendor";backup=1;mountable=1
+/product        ext4        /dev/block/mapper/product_b                flags=display="Product";backup=1;mountable=1
+/system_ext     ext4        /dev/block/mapper/system_ext_b             flags=display="System_Ext";backup=1;mountable=1
+/userdata       f2fs        /dev/block/bootdevice/by-name/userdata     flags=display="Userdata";backup=0;mountable=1;encryptable=footer
+/metadata       raw         /dev/block/bootdevice/by-name/metadata     flags=display="Metadata";backup=1
+/cache          ext4        /dev/block/bootdevice/by-name/cache        flags=display="Cache";backup=0;mountable=1
+/misc           emmc        /dev/block/bootdevice/by-name/misc         flags=display="Misc";backup=1

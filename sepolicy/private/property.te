@@ -1,0 +1,2 @@
+#  SELinux For TWRP 
+vendor_internal_prop(vendor_twrp_prop)

@@ -1,0 +1,3 @@
+# About TWRP 
+ro.vendor.twrp.    u:object_r:vendor_twrp_prop:s0 prefix string
+persist.vendor.twrp. u:object_r:vendor_twrp_prop:s0 prefix bool

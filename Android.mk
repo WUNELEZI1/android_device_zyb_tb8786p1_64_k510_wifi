@@ -1,34 +1,35 @@
-#
-# Copyright (C) 2025 The Android Open Source Project
-# Copyright (C) 2025 SebaUbuntu's TWRP device tree generator
-#
-# SPDX-License-Identifier: Apache-2.0
-#
-
+# tb8786p1_64_k510_wifi Android.mk
 LOCAL_PATH := $(call my-dir)
 
-# 关键修复：改用 PRODUCT_DEVICE 避免 TARGET_DEVICE 触发只读变量冲突
-ifeq ($(PRODUCT_DEVICE),tb8786p1_64_k510_wifi)
+ifneq ($(filter tb8786p1_64_k510_wifi, $(TARGET_DEVICE)),)
 
-# 优先加载 TWRP 配置（改用 include 而非 inherit-product）
-ifneq ($(wildcard $(LOCAL_PATH)/twrp.mk),)
-    include $(LOCAL_PATH)/twrp.mk
-endif
-
-# 加载设备配置（改用 include 而非 inherit-product）
-ifneq ($(wildcard $(LOCAL_PATH)/device.mk),)
-    include $(LOCAL_PATH)/device.mk
-endif
-
-# MTK 平板 vendor_boot 构建
-PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
-
-# 平板模块过滤（排除手机组件）
-PRODUCT_PACKAGES := \
-    recovery \
-    recoveryimage
-
-# 包含设备目录下所有模块（安全写法）
+# 优先加载配置
 include $(call all-subdir-makefiles)
+
+# 核心模块（编译vendor_boot/boot，无独立recovery）
+PRODUCT_PACKAGES += \
+    vendor_bootimage \
+    bootimage
+
+# 设备属性（匹配解包的build.prop）
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.product.device=tb8786p1_64_k510_wifi \
+    ro.product.name=vnd_tb8786p1_64_k510_wifi \
+    ro.product.brand=ZYB \
+    ro.product.model=ZPD1321 \
+    ro.product.manufacturer=ZYB \
+    ro.bootimage.build.id=SP1A.210812.016 \
+    ro.bootimage.build.version.sdk=31 \
+    ro.bootimage.build.version.release=12
+
+# 复制预编译文件（使用你已有的内核/dtb）
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/prebuilt/Image.gz-dtb:kernel \
+    $(LOCAL_PATH)/dtb/mt6768.dtb:dtb.img \
+    $(LOCAL_PATH)/recovery.fstab:recovery/root/etc/recovery.fstab
+
+# MTK必需配置
+PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
+PRODUCT_BUILD_BOOT_IMAGE := true
 
 endif
