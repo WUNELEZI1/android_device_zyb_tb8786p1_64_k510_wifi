@@ -1,6 +1,3 @@
-# tb8786p1_64_k510_wifi recovery.fstab
-# 基于fastboot getvar all生成
-
 /boot           emmc        /dev/block/bootdevice/by-name/boot_a        flags=display="Boot";backup=1;flashimg=1
 /boot_b         emmc        /dev/block/bootdevice/by-name/boot_b        flags=display="Boot_b";backup=1;flashimg=1
 /vendor_boot    emmc        /dev/block/bootdevice/by-name/vendor_boot_a flags=display="Vendor_Boot";backup=1;flashimg=1
