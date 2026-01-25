@@ -142,3 +142,8 @@ TARGET_SCREEN_HEIGHT := $(TW_SCREEN_HEIGHT)
 # 修复MTK设备TWRP编译的小兼容问题
 TW_INCLUDE_RECOVERY_DTBO := true
 BOARD_INCLUDE_DTB_IN_RECOVERY_IMAGE := true
+
+# 新增：强制导出TWRP变量（最高优先级，解决编译识别问题）
+export TW_THEME := portrait_hdpi
+export TARGET_SCREEN_WIDTH := 1200
+export TARGET_SCREEN_HEIGHT := 1920
