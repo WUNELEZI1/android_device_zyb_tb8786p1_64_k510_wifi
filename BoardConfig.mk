@@ -14,11 +14,14 @@ TARGET_CPU_SMP := true
 BOARD_HAS_NO_BLUETOOTH := true
 BOARD_HAS_NO_MOBILE_DATA := true
 
-# 架构配置（arm64-v8a）
+# 架构配置（arm64-v8a）- 新增64位应用支持声明
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_VARIANT := cortex-a73
+# 核心修复：声明64位设备支持64位应用（解决架构冲突）
+TARGET_SUPPORTS_64_BIT_APPS := true
+# 32位兼容配置
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv8-a
 TARGET_2ND_CPU_ABI := armeabi-v7a
@@ -112,18 +115,17 @@ TW_INCLUDE_REPACKTOOLS := true
 TARGET_USES_LOGD := true
 TWRP_INCLUDE_LOGCAT := true
 
-# 安全补丁和版本（仅保留可配置项，移除只读变量）
+# 安全补丁和版本（仅保留可配置项）
 PLATFORM_SECURITY_PATCH := 2024-09-05
 VENDOR_SECURITY_PATCH := 2024-09-05
 PLATFORM_VERSION := 12.0.0
-# 移除：PLATFORM_VERSION_ALL_CODENAMES := SP1A.210812.016（只读变量，禁止赋值）
 TARGET_BOOT_DEVICE := tb8786p1_64_k510_wifi
 
 # 禁用AVB（设备已unlocked）
 BOARD_AVB_ENABLE := false
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 2
 
-# SELinux配置（适配Android 12+废弃变量）
+# SELinux配置
 BOARD_SEPOLICY_DIRS := \
     $(DEVICE_PATH)/sepolicy \
     device/mediatek/sepolicy
