@@ -8,8 +8,11 @@ TW_EXTERNAL_STORAGE_MOUNT_POINT := "sdcard"
 TW_INTERNAL_STORAGE_PATH := "/data/media/0"
 TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
 
+# ³¹µ×½ûÓÃsplash¾µÏñ£¨½â¾öÈ±Ê§¾¯¸æ£©
 TW_SPLASH_PATH := none
 TW_SKIP_SPLASH_IMAGE := true
+TW_DISABLE_SPLASH := true
+TW_NO_SPLASH := true
 
 TW_DISABLE_PRODUCT_VAR_ASSIGN := true
 

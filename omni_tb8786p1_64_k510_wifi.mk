@@ -3,7 +3,7 @@ $(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/BoardConfig.mk)
 $(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/twrp.mk)
 $(call inherit-product, vendor/twrp/config/common.mk)
 
-# 合并属性声明，避免冲突
+# 合并属性声明
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.twrp.version=3.7.0-zyb \
     ro.twrp.screen_width=1200 \
@@ -18,6 +18,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.bootimage.build.id=SP1A.210812.016 \
     ro.bootimage.build.version.sdk=31 \
     ro.bootimage.build.version.release=12
+
+# 迁移Android.mk的文件复制逻辑（避免PRODUCT_COPY_FILES冲突）
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/prebuilt/Image.gz-dtb:kernel \
+    $(LOCAL_PATH)/dtb/mt6768.dtb:dtb.img \
+    $(LOCAL_PATH)/recovery.fstab:recovery/root/etc/recovery.fstab
+
+# MTK必需配置
+PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
+PRODUCT_BUILD_BOOT_IMAGE := true
 
 PRODUCT_NAME := omni_tb8786p1_64_k510_wifi
 PRODUCT_DEVICE := tb8786p1_64_k510_wifi
