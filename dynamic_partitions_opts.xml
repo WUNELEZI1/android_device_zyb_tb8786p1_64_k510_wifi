@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dynamic_partitions>
+	<super partition="super" size="0x280000000">
+		<group name="zyb_dynamic_partitions" size="0x280000000">
+			<partition name="system" size="0x8632B000" />
+			<partition name="vendor" size="0x1BA37000" />
+			<partition name="product" size="0xC95F000" />
+			<partition name="system_ext" size="0x29B38000" />
+		</group>
+	</super>
+</dynamic_partitions>
