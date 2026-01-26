@@ -6,6 +6,7 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 PRODUCT_BUILD_BOOT_IMAGE := false
 PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
 
+# 匹配解包的OS版本和设备属性
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.twrp.version=3.7.0-zyb \
     ro.twrp.screen_width=1200 \
@@ -18,16 +19,18 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.product.model=ZPD1321 \
     ro.product.manufacturer=ZYB \
     ro.bootimage.build.id=SP1A.210812.016 \
-    ro.bootimage.build.version.sdk=33 \
-    ro.bootimage.build.version.release=13
+    ro.bootimage.build.version.sdk=31 \  # 匹配解包OS_VERSION=12对应的SDK 31
+    ro.bootimage.build.version.release=12 \
+    ro.build.version.security_patch=2024-09-05
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilt/Image.gz-dtb:kernel \
     $(LOCAL_PATH)/dtb/mt6768.dtb:dtb.img \
     $(LOCAL_PATH)/recovery.fstab:recovery/root/etc/recovery.fstab
 
+# 正确依赖（无下划线）
 PRODUCT_PACKAGES += \
-    vendor_bootimage
+    vendorbootimage
 
 PRODUCT_NAME := omni_tb8786p1_64_k510_wifi
 PRODUCT_DEVICE := tb8786p1_64_k510_wifi
