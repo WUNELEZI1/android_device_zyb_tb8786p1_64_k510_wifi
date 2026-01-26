@@ -8,7 +8,6 @@ TW_EXTERNAL_STORAGE_MOUNT_POINT := "sdcard"
 TW_INTERNAL_STORAGE_PATH := "/data/media/0"
 TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
 
-# 禁用splash
 TW_SPLASH_PATH := none
 TW_SKIP_SPLASH_IMAGE := true
 TW_DISABLE_SPLASH := true
@@ -16,12 +15,10 @@ TW_NO_SPLASH := true
 
 TW_DISABLE_PRODUCT_VAR_ASSIGN := true
 
-# MTK设备适配
 TW_MTK := true
 TW_MTK_DEVICE := true
 TW_INCLUDE_MTK_APDB := true
 
-# TWRP属性
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.twrp.version=3.7.0-zyb \
     ro.twrp.build.date=$(shell date +%Y%m%d)
