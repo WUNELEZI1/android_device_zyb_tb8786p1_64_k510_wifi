@@ -19,10 +19,11 @@ TW_MTK := true
 TW_MTK_DEVICE := true
 TW_INCLUDE_MTK_APDB := true
 
-# 匹配解包的ramdisk格式
+# 匹配vendor_boot格式
 TW_VENDOR_BOOT_RAMDISK_TYPE := raw
 TW_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.twrp.version=3.7.0-zyb \
-    ro.twrp.build.date=$(shell date +%Y%m%d)
+    ro.twrp.build.date=$(shell date +%Y%m%d) \
+    ro.build.fingerprint=$(PRODUCT_BUILD_FINGERPRINT)

@@ -6,7 +6,9 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 PRODUCT_BUILD_BOOT_IMAGE := false
 PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
 
-# 匹配解包的OS版本和设备属性
+# 修正BUILD_FINGERPRINT（无空格，匹配设备实际信息）
+PRODUCT_BUILD_FINGERPRINT := ZYB/omni_tb8786p1_64_k510_wifi/tb8786p1_64_k510_wifi:13/SP1A.210812.016/runner01261434:eng/test-keys
+
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.twrp.version=3.7.0-zyb \
     ro.twrp.screen_width=1200 \
@@ -19,16 +21,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.product.model=ZPD1321 \
     ro.product.manufacturer=ZYB \
     ro.bootimage.build.id=SP1A.210812.016 \
-    ro.bootimage.build.version.sdk=31 \  # 匹配解包OS_VERSION=12对应的SDK 31
-    ro.bootimage.build.version.release=12 \
-    ro.build.version.security_patch=2024-09-05
+    ro.bootimage.build.version.sdk=33 \
+    ro.bootimage.build.version.release=13 \
+    ro.build.version.security_patch=2024-05-05 \
+    ro.build.fingerprint=$(PRODUCT_BUILD_FINGERPRINT)
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilt/Image.gz-dtb:kernel \
     $(LOCAL_PATH)/dtb/mt6768.dtb:dtb.img \
     $(LOCAL_PATH)/recovery.fstab:recovery/root/etc/recovery.fstab
 
-# 正确依赖（无下划线）
 PRODUCT_PACKAGES += \
     vendorbootimage
 
@@ -40,4 +42,7 @@ PRODUCT_MANUFACTURER := ZYB
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_DEVICE=tb8786p1_64_k510_wifi \
-    PRODUCT_NAME=omni_tb8786p1_64_k510_wifi
+    PRODUCT_NAME=omni_tb8786p1_64_k510_wifi \
+    BUILD_FINGERPRINT=$(PRODUCT_BUILD_FINGERPRINT) \
+    PLATFORM_VERSION=13 \
+    BUILD_ID=SP1A.210812.016
