@@ -7,10 +7,10 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 PRODUCT_BUILD_BOOT_IMAGE := false
 PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
 
-# 原厂指纹（匹配fastboot getvar）
+# 原厂指纹（完全匹配fastboot getvar vendor-fingerprint）
 PRODUCT_BUILD_FINGERPRINT := ZYB/vnd_tb8786p1_64_k510_wifi/tb8786p1_64_k510_wifi:12/SP1A.210812.016/737_748_749_743_744_745_746-236:user/release-keys
 
-# 产品属性（匹配adb getprop）
+# 产品属性（匹配adb getprop+fastboot）
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.twrp.version=3.7.0-zyb \
     ro.twrp.screen_width=1200 \
@@ -28,8 +28,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.build.version.security_patch=2024-05-05 \
     ro.build.fingerprint=$(PRODUCT_BUILD_FINGERPRINT) \
     ro.sf.lcd_density=320 \
+    ro.zygote=zygote64_32 \
     ro.dynamic_partitions=true \
-    ro.zygote=zygote64_32
+    ro.vndk.version=31 \
+    ro.first_api_level=34
 
 # 复制核心文件
 PRODUCT_COPY_FILES += \
@@ -49,7 +51,7 @@ PRODUCT_BRAND := ZYB
 PRODUCT_MODEL := ZPD1321
 PRODUCT_MANUFACTURER := ZYB
 
-# 覆盖编译属性
+# 覆盖编译属性（指定只读变量）
 PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_DEVICE=tb8786p1_64_k510_wifi \
     PRODUCT_NAME=omni_tb8786p1_64_k510_wifi \
@@ -58,4 +60,6 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     BUILD_ID=SP1A.210812.016 \
     SECURITY_PATCH=2024-05-05 \
     FIRST_API_LEVEL=34 \
-    VNDK_VERSION=31
+    VNDK_VERSION=31 \
+    ROOT_MANAGER=1 \
+    TW_DEVICE_VERSION=3.7.0-zyb

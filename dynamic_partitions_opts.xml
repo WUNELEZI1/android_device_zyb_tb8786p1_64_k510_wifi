@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <dynamic_partitions>
 	<super partition="super" size="0x280000000">
 		<group name="zyb_dynamic_partitions" size="0x280000000">

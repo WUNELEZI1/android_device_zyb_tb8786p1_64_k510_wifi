@@ -9,7 +9,7 @@ TW_EXTERNAL_STORAGE_MOUNT_POINT := "sdcard"
 TW_INTERNAL_STORAGE_PATH := "/data/media/0"
 TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
 
-#  Splash≈‰÷√
+# Splash≈‰÷√
 TW_SPLASH_PATH := $(DEVICE_PATH)/twres
 TW_SKIP_SPLASH_IMAGE := true
 TW_DISABLE_SPLASH := true
