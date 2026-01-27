@@ -1,20 +1,25 @@
 ﻿#!/bin/bash
-echo "🧪 Testing device tree build..."
-
-# 检查关键文件
-echo "📁 Checking device tree structure:"
-ls -la
-
-# 检查主题配置
-echo "🎨 Checking theme configuration:"
-grep -r "TW_THEME" *.mk
-
-# 检查分区配置
-echo "💾 Checking partition sizes:"
-grep -E "VENDOR_BOOT|BOOT|USERDATA" BoardConfig.mk
-
-# 检查依赖
-echo "🔗 Checking dependencies:"
-cat twrp.dependencies
-
-echo "✅ Device tree structure looks good"
+echo "=== 简单TWRP构建脚本 ==="
+echo "1. 检查环境..."
+which java && java -version
+which make && make --version
+echo "2. 设备信息:"
+echo "设备: tb8786p1_64_k510_wifi"
+echo "芯片: MT6768"
+echo "Android: 13"
+echo "屏幕: 1200x1920 @ 320DPI"
+echo "3. 构建指令:"
+echo "lunch omni_tb8786p1_64_k510_wifi-eng"
+echo "make recoveryimage"
+echo "4. 预期输出文件:"
+echo "out/target/product/tb8786p1_64_k510_wifi/ramdisk-recovery.cpio.gz"
+echo "刷机命令: fastboot flash vendor_boot:recovery ramdisk-recovery.cpio.gz"
+echo "5. 常见问题:"
+echo "Q: 构建失败 'No rule to make target'"
+echo "A: 确保使用 make recoveryimage 而不是 make bootimage"
+echo ""
+echo "Q: 主题错误 'portrait_mdpi not found'"
+echo "A: 创建 bootable/recovery/gui/theme/portrait_mdpi/ui.xml 最小文件"
+echo ""
+echo "Q: vendor_boot 大小错误"
+echo "A: 检查 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE = 0x4000000"
