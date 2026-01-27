@@ -3,9 +3,13 @@ $(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/BoardConfig.mk)
 $(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/twrp.mk)
 $(call inherit-product, vendor/twrp/config/common.mk)
 
-# 仅构建vendor_boot
+# 仅构建vendor_boot（最小化编译目标）
 PRODUCT_BUILD_BOOT_IMAGE := false
 PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
+PRODUCT_BUILD_SYSTEM_IMAGE := false
+PRODUCT_BUILD_VENDOR_IMAGE := false
+PRODUCT_BUILD_PRODUCT_IMAGE := false
+PRODUCT_BUILD_SYSTEM_EXT_IMAGE := false
 
 # 原厂指纹（完全匹配fastboot getvar vendor-fingerprint）
 PRODUCT_BUILD_FINGERPRINT := ZYB/vnd_tb8786p1_64_k510_wifi/tb8786p1_64_k510_wifi:12/SP1A.210812.016/737_748_749_743_744_745_746-236:user/release-keys
@@ -33,16 +37,15 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.vndk.version=31 \
     ro.first_api_level=34
 
-# 复制核心文件
+# 复制核心文件（仅保留必需文件）
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilt/Image.gz-dtb:kernel \
     $(LOCAL_PATH)/dtb/mt6768.dtb:dtb.img \
     $(LOCAL_PATH)/recovery.fstab:recovery/root/etc/recovery.fstab \
     $(LOCAL_PATH)/dynamic_partitions_opts.xml:dynamic_partitions_opts.xml
 
-# 编译依赖
-PRODUCT_PACKAGES += \
-    vendorbootimage
+# 编译依赖（仅保留vendor_boot必需依赖）
+PRODUCT_PACKAGES := vendorbootimage
 
 # 产品标识
 PRODUCT_NAME := omni_tb8786p1_64_k510_wifi
