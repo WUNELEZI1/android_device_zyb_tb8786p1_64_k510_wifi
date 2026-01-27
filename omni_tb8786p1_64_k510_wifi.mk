@@ -1,20 +1,26 @@
+# ======== 强制启用 vendor_boot 相关构建模式 ========
+# 在继承任何 TWRP 配置前定义，确保最高优先级
+# 我们的目标不是构建完整img，而是让TWRP生成正确的recovery ramdisk
+TW_BUILD_VENDOR_BOOT := true
+# 禁用标准的recovery.img生成，避免冲突
+TW_NO_BUILD_RECOVERY_IMAGE := true
+
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/BoardConfig.mk)
 $(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/twrp.mk)
 $(call inherit-product, vendor/twrp/config/common.mk)
 
-# 仅构建vendor_boot（最小化编译目标）
-PRODUCT_BUILD_BOOT_IMAGE := false
-PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
-PRODUCT_BUILD_SYSTEM_IMAGE := false
-PRODUCT_BUILD_VENDOR_IMAGE := false
-PRODUCT_BUILD_PRODUCT_IMAGE := false
-PRODUCT_BUILD_SYSTEM_EXT_IMAGE := false
+# ======== 产品基础信息 ========
+PRODUCT_NAME := omni_tb8786p1_64_k510_wifi
+PRODUCT_DEVICE := tb8786p1_64_k510_wifi
+PRODUCT_BRAND := ZYB
+PRODUCT_MODEL := ZPD1321
+PRODUCT_MANUFACTURER := ZYB
 
-# 原厂指纹（完全匹配fastboot getvar vendor-fingerprint）
+# ======== 设备指纹 (与fastboot getvar结果完全匹配) ========
 PRODUCT_BUILD_FINGERPRINT := ZYB/vnd_tb8786p1_64_k510_wifi/tb8786p1_64_k510_wifi:12/SP1A.210812.016/737_748_749_743_744_745_746-236:user/release-keys
 
-# 产品属性（匹配adb getprop+fastboot）
+# ======== 关键系统属性 (与adb getprop结果匹配) ========
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.twrp.version=3.7.0-zyb \
     ro.twrp.screen_width=1200 \
@@ -37,24 +43,14 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.vndk.version=31 \
     ro.first_api_level=34
 
-# 复制核心文件（仅保留必需文件）
+# ======== 复制关键预编译文件和配置 ========
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/prebuilt/Image.gz-dtb:kernel \
-    $(LOCAL_PATH)/dtb/mt6768.dtb:dtb.img \
+    $(LOCAL_PATH)/prebuilt/Image.gz-dtb:$(TARGET_COPY_OUT_RAMDISK)/kernel \
+    $(LOCAL_PATH)/dtb/mt6768.dtb:$(TARGET_COPY_OUT_RAMDISK)/dtb.img \
     $(LOCAL_PATH)/recovery.fstab:recovery/root/etc/recovery.fstab \
     $(LOCAL_PATH)/dynamic_partitions_opts.xml:dynamic_partitions_opts.xml
 
-# 编译依赖（仅保留vendor_boot必需依赖）
-PRODUCT_PACKAGES := vendorbootimage
-
-# 产品标识
-PRODUCT_NAME := omni_tb8786p1_64_k510_wifi
-PRODUCT_DEVICE := tb8786p1_64_k510_wifi
-PRODUCT_BRAND := ZYB
-PRODUCT_MODEL := ZPD1321
-PRODUCT_MANUFACTURER := ZYB
-
-# 覆盖编译属性（指定只读变量）
+# ======== 构建属性覆盖 ========
 PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_DEVICE=tb8786p1_64_k510_wifi \
     PRODUCT_NAME=omni_tb8786p1_64_k510_wifi \

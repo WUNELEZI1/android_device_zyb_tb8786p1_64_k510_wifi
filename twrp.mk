@@ -22,7 +22,7 @@ TW_MTK := true
 TW_MTK_DEVICE := true
 TW_INCLUDE_MTK_APDB := true
 
-# vendor_boot格式配置
+# 关键修改：与BoardConfig.mk保持一致，为vendor_boot ramdisk配置
 TW_VENDOR_BOOT_RAMDISK_TYPE := raw
 TW_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
 

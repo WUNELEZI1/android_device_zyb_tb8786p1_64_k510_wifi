@@ -1,18 +1,13 @@
 LOCAL_PATH := $(call my-dir)
 
+# 如果当前编译的设备是 tb8786p1_64_k510_wifi
 ifneq ($(filter tb8786p1_64_k510_wifi, $(TARGET_DEVICE)),)
 
-# 优先加载配置
+# 包含所有子目录中的 makefile (例如 sepolicy 目录下的)
 include $(call all-subdir-makefiles)
 
-# 复制预编译文件（使用已有的内核/dtb）
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/prebuilt/Image.gz-dtb:kernel \
-    $(LOCAL_PATH)/dtb/mt6768.dtb:dtb.img \
-    $(LOCAL_PATH)/recovery.fstab:recovery/root/etc/recovery.fstab
-
-# MTK必需配置
-PRODUCT_BUILD_VENDOR_BOOT_IMAGE := true
-PRODUCT_BUILD_BOOT_IMAGE := true
+# 复制预编译的内核和DTB文件
+# 注意：这些 PRODUCT_COPY_FILES 现在定义在 omni_tb8786p1_64_k510_wifi.mk 中
+# 此处不再重复定义，避免冲突
 
 endif

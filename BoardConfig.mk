@@ -64,19 +64,17 @@ BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 TW_IGNORE_KERNEL_REPLACE := true  # 禁用TWRP内核规则
 
-# 内核命令行+启动参数（匹配原厂fastboot）
+# 内核命令行+启动参数（关键修改！匹配原厂vendor_boot的fastboot信息）
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user
-BOARD_MKBOOTIMG_ARGS := \
-    --header_version 4 \
-    --kernel_offset 0x00008000 \
-    --ramdisk_offset 0x11000000 \
-    --tags_offset 0x13f00000 \
-    --dtb $(TARGET_PREBUILT_DTB) \
-    --kernel $(TARGET_PREBUILT_KERNEL) \
-    --ramdisk_type gz
 
-# vendor_boot专属配置（匹配dump镜像信息）
-BOARD_VENDOR_BOOT_RAMDISK_TYPE := raw
+# 关键修改：移除为boot.img定义的BOARD_MKBOOTIMG_ARGS，因为我们不构建boot.img
+# 这些参数仅适用于boot.img，而vendor_boot使用不同的参数集
+
+# vendor_boot专属配置（关键修改！严格匹配你的解包信息）
+BOARD_VENDOR_RAMDISK_FRAGMENTS :=
+BOARD_VENDOR_RAMDISK_TYPE := raw
+# 关键：根据解包信息，ramdisk格式是raw，但检测到压缩为gzip
+BOARD_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
 BOARD_VENDOR_BOOT_DTB_SIZE := 159397
 BOARD_VENDOR_BOOT_PAGESIZE := 4096
 
@@ -118,7 +116,7 @@ TW_SPLASH_PATH := $(DEVICE_PATH)/twres
 TW_SKIP_SPLASH_IMAGE := true
 TW_DISABLE_SPLASH := true
 TW_NO_SPLASH := true
-TW_BUILD_VENDOR_BOOT := true
+TW_BUILD_VENDOR_BOOT := true  # 通知TWRP我们希望为vendor_boot构建
 
 # 系统版本（匹配adb getprop+fastboot）
 PLATFORM_SECURITY_PATCH := 2024-05-05
