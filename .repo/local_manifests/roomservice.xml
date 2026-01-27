@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-	<remote name="github" fetch="https://github.com/" />
-	<project path="device/zyb/tb8786p1_64_k510_wifi"
-			 name="WUNELEZI1/android_device_zyb_tb8786p1_64_k510_wifi"
-			 remote="github"
-			 revision="main"
-			 groups="device" />
-</manifest>
