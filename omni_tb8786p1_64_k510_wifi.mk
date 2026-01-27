@@ -1,5 +1,5 @@
 # ======== 【强制定义】必须在任何inherit之前 ========
-TW_THEME := portrait_mdpi           # 关键修改：使用标准mdpi主题，确保存在
+TW_THEME := portrait_mdpi
 TW_SCREEN_WIDTH := 1200
 TW_SCREEN_HEIGHT := 1920
 TW_BUILD_VENDOR_BOOT := true
