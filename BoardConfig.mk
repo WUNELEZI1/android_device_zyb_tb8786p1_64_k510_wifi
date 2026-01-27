@@ -62,18 +62,13 @@ TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/dtb/mt6768.dtb
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-TW_IGNORE_KERNEL_REPLACE := true  # 禁用TWRP内核规则
+TW_IGNORE_KERNEL_REPLACE := true
 
-# 内核命令行+启动参数（关键修改！匹配原厂vendor_boot的fastboot信息）
+# 内核命令行+启动参数（匹配原厂vendor_boot的fastboot信息）
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user
 
-# 关键修改：移除为boot.img定义的BOARD_MKBOOTIMG_ARGS，因为我们不构建boot.img
-# 这些参数仅适用于boot.img，而vendor_boot使用不同的参数集
-
-# vendor_boot专属配置（关键修改！严格匹配你的解包信息）
-BOARD_VENDOR_RAMDISK_FRAGMENTS :=
+# vendor_boot专属配置（严格匹配你的解包信息）
 BOARD_VENDOR_RAMDISK_TYPE := raw
-# 关键：根据解包信息，ramdisk格式是raw，但检测到压缩为gzip
 BOARD_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
 BOARD_VENDOR_BOOT_DTB_SIZE := 159397
 BOARD_VENDOR_BOOT_PAGESIZE := 4096
@@ -90,14 +85,14 @@ TARGET_COPY_OUT_VENDOR := vendor
 TARGET_COPY_OUT_PRODUCT := product
 TARGET_COPY_OUT_SYSTEM_EXT := system_ext
 
-# TWRP配置（适配屏幕+硬件）
+# TWRP配置（适配屏幕+硬件）- 关键修改：同步使用mdpi主题
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
 BOARD_USES_RECOVERY_AS_BOOT := false
 BOARD_SUPPORTS_FLASH_FROM_STORAGE := true
 RECOVERY_SDCARD_ON_DATA := true
 BOARD_HAS_NO_SELECT_BUTTON := true
-TW_THEME := portrait_hdpi
+TW_THEME := portrait_mdpi                 # 修改：使用mdpi确保主题存在
 TW_SCREEN_WIDTH := 1200
 TW_SCREEN_HEIGHT := 1920
 TW_ROTATE_SCREEN := false
@@ -116,7 +111,7 @@ TW_SPLASH_PATH := $(DEVICE_PATH)/twres
 TW_SKIP_SPLASH_IMAGE := true
 TW_DISABLE_SPLASH := true
 TW_NO_SPLASH := true
-TW_BUILD_VENDOR_BOOT := true  # 通知TWRP我们希望为vendor_boot构建
+TW_BUILD_VENDOR_BOOT := true
 
 # 系统版本（匹配adb getprop+fastboot）
 PLATFORM_SECURITY_PATCH := 2024-05-05
@@ -138,8 +133,8 @@ SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS := $(DEVICE_PATH)/sepolicy/private
 PRODUCT_PROPERTY_OVERRIDES ?=
 
 # 屏幕密度（匹配adb ro.sf.lcd_density=320）
-TARGET_SCREEN_WIDTH := $(TW_SCREEN_WIDTH)
-TARGET_SCREEN_HEIGHT := $(TW_SCREEN_HEIGHT)
+TARGET_SCREEN_WIDTH := 1200
+TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_DENSITY := 320
 
 TW_INCLUDE_RECOVERY_DTBO := true

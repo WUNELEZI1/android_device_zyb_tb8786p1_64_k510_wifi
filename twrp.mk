@@ -22,12 +22,14 @@ TW_MTK := true
 TW_MTK_DEVICE := true
 TW_INCLUDE_MTK_APDB := true
 
-# 关键修改：与BoardConfig.mk保持一致，为vendor_boot ramdisk配置
+# vendor_boot ramdisk配置
 TW_VENDOR_BOOT_RAMDISK_TYPE := raw
 TW_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
 
-# 禁用TWRP内核规则，使用预编译内核
+# 禁用TWRP内核规则
 TW_IGNORE_KERNEL_REPLACE := true
+
+# 注意：此处不定义TW_THEME，已在主文件定义
 
 # 追加属性
 PRODUCT_PROPERTY_OVERRIDES += \
