@@ -68,7 +68,6 @@ TW_IGNORE_KERNEL_REPLACE := true
 # boot.img 已经包含 DTB，不需要额外添加
 BOARD_INCLUDE_DTB_IN_BOOTIMG := false
 
-
 # ========== 内核命令行 ==========
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user
 
@@ -174,9 +173,12 @@ SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS := $(DEVICE_PATH)/sepolicy/public
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS := $(DEVICE_PATH)/sepolicy/private
 
 # ========== DTB/DTBO 配置 ==========
+# boot.img 已包含 DTB，不需要 BOARD_PREBUILT_DTBIMAGE_DIR
 TW_INCLUDE_RECOVERY_DTBO := true
 BOARD_INCLUDE_DTB_IN_RECOVERY_IMAGE := true
-BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/dtb
+
+# recovery 使用的 DTB 文件
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/dtb/mt6768.dtb
 
 # ========== 硬件功能 ==========
 BOARD_HAS_TEE := true
