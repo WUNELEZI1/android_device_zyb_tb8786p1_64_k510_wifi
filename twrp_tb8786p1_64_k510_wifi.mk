@@ -11,7 +11,7 @@ $(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/BoardConfig.mk)
 $(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/twrp.mk)
 $(call inherit-product, vendor/twrp/config/common.mk)
 
-PRODUCT_NAME := omni_tb8786p1_64_k510_wifi
+PRODUCT_NAME := twrp_tb8786p1_64_k510_wifi
 PRODUCT_DEVICE := tb8786p1_64_k510_wifi
 PRODUCT_BRAND := ZYB
 PRODUCT_MODEL := ZPD1321
@@ -55,7 +55,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_DEVICE=tb8786p1_64_k510_wifi \
-    PRODUCT_NAME=omni_tb8786p1_64_k510_wifi \
+    PRODUCT_NAME=twrp_tb8786p1_64_k510_wifi \
     BUILD_FINGERPRINT=$(PRODUCT_BUILD_FINGERPRINT) \
     PLATFORM_VERSION=12 \
     BUILD_ID=SP1A.210812.016 \
