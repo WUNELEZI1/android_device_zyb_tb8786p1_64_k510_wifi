@@ -1,67 +1,183 @@
-TW_THEME := portrait_mdpi
+DEVICE_PATH := device/zyb/tb8786p1_64_k510_wifi
+
+# ========== 构建系统兼容性设置 ==========
+ALLOW_MISSING_DEPENDENCIES := true
+BUILD_BROKEN_DUP_RULES := true
+BUILD_BROKEN_MISSING_REQUIRED_MODULES := true
+
+# ========== 平台配置 ==========
+TARGET_BOARD_PLATFORM := mt6768
+BOARD_HAS_MTK_HARDWARE := true
+MTK_PLATFORM := mt6768
+TARGET_CPU_SMP := true
+BOARD_HAS_NO_BLUETOOTH := true
+BOARD_HAS_NO_MOBILE_DATA := true
+
+# ========== CPU 架构配置 ==========
+TARGET_ARCH := arm64
+TARGET_ARCH_VARIANT := armv8-a
+TARGET_CPU_ABI := arm64-v8a
+TARGET_CPU_VARIANT := cortex-a73
+TARGET_SUPPORTS_64_BIT_APPS := true
+TARGET_2ND_ARCH := arm
+TARGET_2ND_ARCH_VARIANT := armv8-a
+TARGET_2ND_CPU_ABI := armeabi-v7a
+TARGET_2ND_CPU_VARIANT := cortex-a53
+
+# ========== Bootloader 配置 ==========
+TARGET_BOOTLOADER_BOARD_NAME := tb8786p1_64_k510_wifi
+TARGET_NO_BOOTLOADER := true
+BOARD_BOOTLOADER_HEADER_VERSION := 4
+
+# ========== AB 分区配置 ==========
+AB_OTA_UPDATER := true
+AB_OTA_PARTITIONS := boot vendor_boot dtbo vbmeta vbmeta_system vbmeta_vendor init_boot tee logo super
+BOARD_USES_VIRTUAL_AB := false
+BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
+BOARD_FLASH_BLOCK_SIZE := 4096
+TARGET_USES_MKE2FS := true
+
+# ========== 动态分区配置 ==========
+BOARD_DYNAMIC_PARTITIONS := true
+BOARD_DYNAMIC_PARTITIONS_CONFIG := $(DEVICE_PATH)/dynamic_partitions_opts.xml
+
+# ========== 分区大小配置 ==========
+BOARD_BOOTIMAGE_PARTITION_SIZE := 0x2000000          
+BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 0x4000000   
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 0x37C6CF8000
+BOARD_SUPER_PARTITION_SIZE := 0x280000000
+BOARD_METADATAIMAGE_PARTITION_SIZE := 0x2000000
+BOARD_DTBOIMG_PARTITION_SIZE := 0x800000
+BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE := 0x800000
+BOARD_VBMETAIMAGE_PARTITION_SIZE := 0x800000
+BOARD_TEEIMAGE_PARTITION_SIZE := 0x600000
+BOARD_LOGOIMAGE_PARTITION_SIZE := 0x900000
+
+# ========== 超级分区组配置 ==========
+BOARD_SUPER_PARTITION_GROUPS := zyb_dynamic_partitions
+BOARD_ZYB_DYNAMIC_PARTITIONS_SIZE := 0x280000000
+BOARD_ZYB_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product system_ext
+BOARD_BUILD_SUPER_IMAGE_BY_DEFAULT := true
+
+# ========== 内核配置 ==========
+TARGET_FORCE_PREBUILT_KERNEL := true
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
+BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
+TW_IGNORE_KERNEL_REPLACE := true
+
+# boot.img 已经包含 DTB，不需要额外添加
+BOARD_INCLUDE_DTB_IN_BOOTIMG := false
+
+# ========== 内核命令行 ==========
+BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user
+
+# ========== VENDOR BOOT 核心配置 ==========
+BOARD_VENDOR_BOOT := true
+BOARD_USES_VENDOR_BOOT := true
+TW_BUILD_VENDOR_BOOT := true
+
+# vendor_boot ramdisk 配置 - 基于实际解包
+BOARD_VENDOR_RAMDISK_TYPE := gzip          
+BOARD_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
+TW_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
+TW_VENDOR_BOOT_RAMDISK_KEEP_SIZE := true
+
+# vendor_boot DTB 配置 - 基于实际大小
+BOARD_VENDOR_BOOT_DTB_SIZE := 159397       
+BOARD_VENDOR_BOOT_PAGESIZE := 4096
+BOARD_VENDOR_RAMDISK_RECOVERY := true
+
+# ========== mkbootimg 参数 ==========
+BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTLOADER_HEADER_VERSION)
+BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_VENDOR_BOOT_PAGESIZE)
+BOARD_MKBOOTIMG_ARGS += --ramdisk_offset 0x4000000
+BOARD_MKBOOTIMG_ARGS += --tags_offset 0x00000100
+BOARD_MKBOOTIMG_ARGS += --dtb_offset 0x1c000000
+
+# ========== 文件系统类型 ==========
+BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
+BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
+TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_USE_F2FS := true
+
+# ========== 分区挂载路径 ==========
+TARGET_COPY_OUT_VENDOR := vendor
+TARGET_COPY_OUT_PRODUCT := product
+TARGET_COPY_OUT_SYSTEM_EXT := system_ext
+
+# ========== Recovery 配置 ==========
+TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
+BOARD_USES_RECOVERY_AS_BOOT := false
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x4000000
+TARGET_RECOVERY_DEVICE := tb8786p1_64_k510_wifi
+
+# ========== TWRP 屏幕配置 ==========
 TW_SCREEN_WIDTH := 1200
 TW_SCREEN_HEIGHT := 1920
-TW_BUILD_VENDOR_BOOT := true
-TW_NO_BUILD_RECOVERY_IMAGE := true
+TW_ROTATE_SCREEN := false
+TARGET_SCREEN_WIDTH := 1200
+TARGET_SCREEN_HEIGHT := 1920
+TARGET_SCREEN_DENSITY := 320
+TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
+TW_MAX_BRIGHTNESS := 255
+TW_DEFAULT_BRIGHTNESS := 150
 
-$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
-$(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/BoardConfig.mk)
-$(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/twrp.mk)
-$(call inherit-product, vendor/twrp/config/common.mk)
+# ========== TWRP 功能配置 ==========
+TW_MTK := true
+TW_DEVICE_ARCH := arm64
+TW_INCLUDE_LIBRESETPROP := true
+TW_EXCLUDE_DEFAULT_USB_INIT := true
+TW_EXTRA_LANGUAGES := true
+TW_DEFAULT_LANGUAGE := zh_CN
+TW_OEM_BUILD := true
+TW_USE_KEYPAD := true
+TW_NO_REBOOT_BOOTLOADER := false
+TW_INCLUDE_NV_DATA_BACKUP := true
+TW_EXCLUDE_CELLULAR := true
+TW_USE_TOOLBOX := true
+TW_INCLUDE_REPACKTOOLS := true
+TARGET_USES_LOGD := true
+TWRP_INCLUDE_LOGCAT := true
+TW_SPLASH_PATH := $(DEVICE_PATH)/twres
+TW_SKIP_SPLASH_IMAGE := true
+TW_DISABLE_SPLASH := true
+TW_NO_SPLASH := true
+BOARD_SUPPORTS_FLASH_FROM_STORAGE := true
+RECOVERY_SDCARD_ON_DATA := true
+BOARD_HAS_NO_SELECT_BUTTON := true
 
-PRODUCT_NAME := omni_tb8786p1_64_k510_wifi
-PRODUCT_DEVICE := tb8786p1_64_k510_wifi
-PRODUCT_BRAND := ZYB
-PRODUCT_MODEL := ZPD1321
-PRODUCT_MANUFACTURER := ZYB
+# ========== RAMDISK 处理 ==========
+BOARD_RAMDISK_USE_LZ4 := false
+TW_HAS_KERNEL_FOR_RECOVERY := true
+BOARD_KERNEL_COMPRESSION := gzip
+BOARD_RAMDISK_COMPRESSION := gzip
 
-# ========== 基于实际 boot.img 的正确版本配置 ==========
-# Android 12 (SDK 31) - 重要！不要用13！
-PRODUCT_PLATFORM_VERSION := 12
-PRODUCT_PLATFORM_SDK_VERSION := 31
-PRODUCT_PLATFORM_VERSION_LAST_STABLE := 12
-PRODUCT_SHIPPING_API_LEVEL := 31
+# ========== 版本信息 - 从boot.img精确提取 ==========
+TARGET_BOOT_DEVICE := tb8786p1_64_k510_wifi
 
-# 安全补丁 - 2024-09
-PRODUCT_SECURITY_PATCH := 2024-09-05
-PRODUCT_VENDOR_SECURITY_PATCH := 2024-09-05
+# ========== AVB 配置 ==========
+BOARD_AVB_ENABLE := false
+BOARD_AVB_ALGORITHM := NONE
+BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 2
 
-# 构建指纹 - 使用正确的版本
-PRODUCT_BUILD_FINGERPRINT := ZYB/vnd_tb8786p1_64_k510_wifi/tb8786p1_64_k510_wifi:12/SP1A.210812.016/20240905:user/release-keys
+# ========== SELinux 策略 ==========
+BOARD_SEPOLICY_DIRS := \
+    $(DEVICE_PATH)/sepolicy \
+    device/mediatek/sepolicy
+SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS := $(DEVICE_PATH)/sepolicy/public
+SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS := $(DEVICE_PATH)/sepolicy/private
 
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.twrp.version=3.7.0-zyb \
-    ro.twrp.build.date=$(shell date +%Y%m%d) \
-    ro.product.device=tb8786p1_64_k510_wifi \
-    ro.product.name=vnd_tb8786p1_64_k510_wifi \
-    ro.product.brand=ZYB \
-    ro.product.model=ZPD1321 \
-    ro.product.manufacturer=ZYB \
-    ro.bootimage.build.id=SP1A.210812.016 \
-    ro.bootimage.build.version.sdk=31 \
-    ro.bootimage.build.version.release=12 \
-    ro.build.version.security_patch=2024-09-05 \
-    ro.build.fingerprint=$(PRODUCT_BUILD_FINGERPRINT) \
-    ro.sf.lcd_density=320 \
-    ro.zygote=zygote64_32 \
-    ro.dynamic_partitions=true \
-    ro.vndk.version=31 \
-    ro.first_api_level=31
+# ========== DTB/DTBO 配置 ==========
+TW_INCLUDE_RECOVERY_DTBO := true
+BOARD_INCLUDE_DTB_IN_RECOVERY_IMAGE := true
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/dtb/mt6768.dtb
 
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/prebuilt/Image.gz-dtb:kernel \
-    $(LOCAL_PATH)/dtb/mt6768.dtb:dtb.img \
-    $(LOCAL_PATH)/recovery.fstab:recovery/root/etc/recovery.fstab \
-    $(LOCAL_PATH)/dynamic_partitions_opts.xml:dynamic_partitions_opts.xml
+# ========== 硬件功能 ==========
+BOARD_HAS_TEE := true
+BOARD_HAS_LOGO := true
 
-PRODUCT_BUILD_PROP_OVERRIDES += \
-    TARGET_DEVICE=tb8786p1_64_k510_wifi \
-    PRODUCT_NAME=omni_tb8786p1_64_k510_wifi \
-    BUILD_FINGERPRINT=$(PRODUCT_BUILD_FINGERPRINT) \
-    PLATFORM_VERSION=12 \
-    BUILD_ID=SP1A.210812.016 \
-    SECURITY_PATCH=2024-09-05 \
-    FIRST_API_LEVEL=31 \
-    VNDK_VERSION=31 \
-    ROOT_MANAGER=1 \
-    TW_DEVICE_VERSION=3.7.0-zyb
+PRODUCT_PROPERTY_OVERRIDES ?=
