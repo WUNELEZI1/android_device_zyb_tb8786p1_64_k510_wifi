@@ -72,10 +72,13 @@ BOARD_INCLUDE_DTB_IN_BOOTIMG := false
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user
 
 # ========== VENDOR BOOT 核心配置 ==========
+# [!重要!] 必须设置这些变量才能构建 vendor_boot
 BOARD_VENDOR_BOOT := true
 BOARD_USES_VENDOR_BOOT := true
-BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 TW_BUILD_VENDOR_BOOT := true
+
+# [!修正!] 删除冲突行，使用 TW_BUILD_VENDOR_BOOT 替代
+# BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 
 # vendor_boot ramdisk 配置 - 基于实际解包
 BOARD_VENDOR_RAMDISK_TYPE := gzip          
