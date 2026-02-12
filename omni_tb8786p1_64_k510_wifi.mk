@@ -2,7 +2,9 @@ TW_THEME := portrait_mdpi
 TW_SCREEN_WIDTH := 1200
 TW_SCREEN_HEIGHT := 1920
 TW_BUILD_VENDOR_BOOT := true
-TW_NO_BUILD_RECOVERY_IMAGE := true
+
+# [!关键修正!] 删除这行，或者改为 false
+TW_NO_BUILD_RECOVERY_IMAGE := false
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/BoardConfig.mk)
@@ -16,17 +18,14 @@ PRODUCT_MODEL := ZPD1321
 PRODUCT_MANUFACTURER := ZYB
 
 # ========== 基于实际 boot.img 的正确版本配置 ==========
-# Android 12 (SDK 31) - 重要！不要用13！
 PRODUCT_PLATFORM_VERSION := 12
 PRODUCT_PLATFORM_SDK_VERSION := 31
 PRODUCT_PLATFORM_VERSION_LAST_STABLE := 12
 PRODUCT_SHIPPING_API_LEVEL := 31
 
-# 安全补丁 - 2024-09
 PRODUCT_SECURITY_PATCH := 2024-09-05
 PRODUCT_VENDOR_SECURITY_PATCH := 2024-09-05
 
-# 构建指纹 - 使用正确的版本
 PRODUCT_BUILD_FINGERPRINT := ZYB/vnd_tb8786p1_64_k510_wifi/tb8786p1_64_k510_wifi:12/SP1A.210812.016/20240905:user/release-keys
 
 PRODUCT_PROPERTY_OVERRIDES += \
