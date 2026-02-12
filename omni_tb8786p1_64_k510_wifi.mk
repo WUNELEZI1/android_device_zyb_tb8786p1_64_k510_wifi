@@ -15,7 +15,19 @@ PRODUCT_BRAND := ZYB
 PRODUCT_MODEL := ZPD1321
 PRODUCT_MANUFACTURER := ZYB
 
-PRODUCT_BUILD_FINGERPRINT := ZYB/vnd_tb8786p1_64_k510_wifi/tb8786p1_64_k510_wifi:12/SP1A.210812.016/737_748_749_743_744_745_746-236:user/release-keys
+# ========== 基于实际 boot.img 的正确版本配置 ==========
+# Android 12 (SDK 31) - 重要！不要用13！
+PRODUCT_PLATFORM_VERSION := 12
+PRODUCT_PLATFORM_SDK_VERSION := 31
+PRODUCT_PLATFORM_VERSION_LAST_STABLE := 12
+PRODUCT_SHIPPING_API_LEVEL := 31
+
+# 安全补丁 - 2024-09
+PRODUCT_SECURITY_PATCH := 2024-09-05
+PRODUCT_VENDOR_SECURITY_PATCH := 2024-09-05
+
+# 构建指纹 - 使用正确的版本
+PRODUCT_BUILD_FINGERPRINT := ZYB/vnd_tb8786p1_64_k510_wifi/tb8786p1_64_k510_wifi:12/SP1A.210812.016/20240905:user/release-keys
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.twrp.version=3.7.0-zyb \
@@ -26,15 +38,15 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.product.model=ZPD1321 \
     ro.product.manufacturer=ZYB \
     ro.bootimage.build.id=SP1A.210812.016 \
-    ro.bootimage.build.version.sdk=33 \
-    ro.bootimage.build.version.release=13 \
-    ro.build.version.security_patch=2024-05-05 \
+    ro.bootimage.build.version.sdk=31 \
+    ro.bootimage.build.version.release=12 \
+    ro.build.version.security_patch=2024-09-05 \
     ro.build.fingerprint=$(PRODUCT_BUILD_FINGERPRINT) \
     ro.sf.lcd_density=320 \
     ro.zygote=zygote64_32 \
     ro.dynamic_partitions=true \
     ro.vndk.version=31 \
-    ro.first_api_level=34
+    ro.first_api_level=31
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilt/Image.gz-dtb:kernel \
@@ -46,10 +58,10 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_DEVICE=tb8786p1_64_k510_wifi \
     PRODUCT_NAME=omni_tb8786p1_64_k510_wifi \
     BUILD_FINGERPRINT=$(PRODUCT_BUILD_FINGERPRINT) \
-    PLATFORM_VERSION=13 \
+    PLATFORM_VERSION=12 \
     BUILD_ID=SP1A.210812.016 \
-    SECURITY_PATCH=2024-05-05 \
-    FIRST_API_LEVEL=34 \
+    SECURITY_PATCH=2024-09-05 \
+    FIRST_API_LEVEL=31 \
     VNDK_VERSION=31 \
     ROOT_MANAGER=1 \
     TW_DEVICE_VERSION=3.7.0-zyb
