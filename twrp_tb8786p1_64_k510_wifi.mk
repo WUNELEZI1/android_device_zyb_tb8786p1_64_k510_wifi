@@ -2,8 +2,6 @@ TW_THEME := portrait_mdpi
 TW_SCREEN_WIDTH := 1200
 TW_SCREEN_HEIGHT := 1920
 TW_BUILD_VENDOR_BOOT := true
-
-# [!关键修正!] 删除这行，或者改为 false
 TW_NO_BUILD_RECOVERY_IMAGE := false
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
@@ -17,15 +15,15 @@ PRODUCT_BRAND := ZYB
 PRODUCT_MODEL := ZPD1321
 PRODUCT_MANUFACTURER := ZYB
 
-# ========== 基于实际 boot.img 的正确版本配置 ==========
+# ========== 版本配置 ==========
 PRODUCT_PLATFORM_VERSION := 12
 PRODUCT_PLATFORM_SDK_VERSION := 31
 PRODUCT_PLATFORM_VERSION_LAST_STABLE := 12
 PRODUCT_SHIPPING_API_LEVEL := 31
-
 PRODUCT_SECURITY_PATCH := 2024-09-05
 PRODUCT_VENDOR_SECURITY_PATCH := 2024-09-05
 
+# [!重要!] 只有一个 BUILD_FINGERPRINT 定义，没有空格！
 PRODUCT_BUILD_FINGERPRINT := ZYB/vnd_tb8786p1_64_k510_wifi/tb8786p1_64_k510_wifi:12/SP1A.210812.016/20240905:user/release-keys
 
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -53,10 +51,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery.fstab:recovery/root/etc/recovery.fstab \
     $(LOCAL_PATH)/dynamic_partitions_opts.xml:dynamic_partitions_opts.xml
 
+# [!重要!] 删除多余的 BUILD_FINGERPRINT 和其他重复定义！
 PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_DEVICE=tb8786p1_64_k510_wifi \
-    PRODUCT_NAME=twrp_tb8786p1_64_k510_wifi \   
-    BUILD_FINGERPRINT=$(PRODUCT_BUILD_FINGERPRINT) \
+    PRODUCT_NAME=twrp_tb8786p1_64_k510_wifi \
     PLATFORM_VERSION=12 \
     BUILD_ID=SP1A.210812.016 \
     SECURITY_PATCH=2024-09-05 \
