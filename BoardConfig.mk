@@ -75,9 +75,6 @@ BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user
 BOARD_VENDOR_BOOT := true
 BOARD_USES_VENDOR_BOOT := true
 TW_BUILD_VENDOR_BOOT := true
-# [!新增!] TWRP-14 兼容性标志
-TW_SUPPORT_VENDOR_BOOT := true
-TW_SUPPORT_BOOT_HEADER_V4 := true
 
 # vendor_boot ramdisk 配置 - 基于实际解包
 BOARD_VENDOR_RAMDISK_TYPE := gzip          

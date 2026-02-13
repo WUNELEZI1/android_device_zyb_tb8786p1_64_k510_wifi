@@ -3,8 +3,10 @@ TW_SCREEN_WIDTH := 1200
 TW_SCREEN_HEIGHT := 1920
 TW_BUILD_VENDOR_BOOT := true
 TW_NO_BUILD_RECOVERY_IMAGE := false
-TW_SUPPORT_VENDOR_BOOT := true
-TW_SUPPORT_BOOT_HEADER_V4 := true  # 添加这个
+
+# [!删除!] TWRP-14 专用标志
+# TW_SUPPORT_VENDOR_BOOT := true
+# TW_SUPPORT_BOOT_HEADER_V4 := true
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/BoardConfig.mk)
@@ -17,16 +19,16 @@ PRODUCT_BRAND := ZYB
 PRODUCT_MODEL := ZPD1321
 PRODUCT_MANUFACTURER := ZYB
 
-# ========== 版本配置 (适配 TWRP-14/Android 14) ==========
-PRODUCT_PLATFORM_VERSION := 14
-PRODUCT_PLATFORM_SDK_VERSION := 34
-PRODUCT_PLATFORM_VERSION_LAST_STABLE := 14
-PRODUCT_SHIPPING_API_LEVEL := 34
+# ========== 版本配置 (TWRP-12.1/Android 12) ==========
+PRODUCT_PLATFORM_VERSION := 12        # [!14 → 12!]
+PRODUCT_PLATFORM_SDK_VERSION := 31   # [!34 → 31!]
+PRODUCT_PLATFORM_VERSION_LAST_STABLE := 12
+PRODUCT_SHIPPING_API_LEVEL := 31     # [!34 → 31!]
 PRODUCT_SECURITY_PATCH := 2024-09-05
 PRODUCT_VENDOR_SECURITY_PATCH := 2024-09-05
 
-# 构建指纹 - Android 14 格式
-PRODUCT_BUILD_FINGERPRINT := ZYB/vnd_tb8786p1_64_k510_wifi/tb8786p1_64_k510_wifi:14/UP1A.240905.001/20240905:user/release-keys
+# 构建指纹 - Android 12 格式
+PRODUCT_BUILD_FINGERPRINT := ZYB/vnd_tb8786p1_64_k510_wifi/tb8786p1_64_k510_wifi:12/SP1A.210812.016/20240905:user/release-keys
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.twrp.version=3.7.0-zyb \
@@ -36,16 +38,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.product.brand=ZYB \
     ro.product.model=ZPD1321 \
     ro.product.manufacturer=ZYB \
-    ro.bootimage.build.id=UP1A.240905.001 \
-    ro.bootimage.build.version.sdk=34 \
-    ro.bootimage.build.version.release=14 \
+    ro.bootimage.build.id=SP1A.210812.016 \
+    ro.bootimage.build.version.sdk=31 \     # [!34 → 31!]
+    ro.bootimage.build.version.release=12 \ # [!14 → 12!]
     ro.build.version.security_patch=2024-09-05 \
     ro.build.fingerprint=$(PRODUCT_BUILD_FINGERPRINT) \
     ro.sf.lcd_density=320 \
     ro.zygote=zygote64_32 \
     ro.dynamic_partitions=true \
-    ro.vndk.version=34 \
-    ro.first_api_level=34
+    ro.vndk.version=31 \                   # [!34 → 31!]
+    ro.first_api_level=31                 # [!34 → 31!]
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilt/Image.gz-dtb:kernel \
@@ -56,10 +58,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_DEVICE=tb8786p1_64_k510_wifi \
     PRODUCT_NAME=twrp_tb8786p1_64_k510_wifi \
-    PLATFORM_VERSION=14 \
-    BUILD_ID=UP1A.240905.001 \
+    PLATFORM_VERSION=12 \                # [!14 → 12!]
+    BUILD_ID=SP1A.210812.016 \
     SECURITY_PATCH=2024-09-05 \
-    FIRST_API_LEVEL=34 \
-    VNDK_VERSION=34 \
+    FIRST_API_LEVEL=31 \                # [!34 → 31!]
+    VNDK_VERSION=31 \                  # [!34 → 31!]
     ROOT_MANAGER=1 \
     TW_DEVICE_VERSION=3.7.0-zyb
