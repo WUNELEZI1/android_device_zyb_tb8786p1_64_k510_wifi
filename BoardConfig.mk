@@ -1,11 +1,9 @@
 DEVICE_PATH := device/zyb/tb8786p1_64_k510_wifi
 
-# ========== 构建系统兼容性设置 ==========
 ALLOW_MISSING_DEPENDENCIES := true
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_MISSING_REQUIRED_MODULES := true
 
-# ========== 平台配置 ==========
 TARGET_BOARD_PLATFORM := mt6768
 BOARD_HAS_MTK_HARDWARE := true
 MTK_PLATFORM := mt6768
@@ -13,7 +11,6 @@ TARGET_CPU_SMP := true
 BOARD_HAS_NO_BLUETOOTH := true
 BOARD_HAS_NO_MOBILE_DATA := true
 
-# ========== CPU 架构配置 ==========
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
@@ -24,12 +21,10 @@ TARGET_2ND_ARCH_VARIANT := armv8-a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_VARIANT := cortex-a53
 
-# ========== Bootloader 配置 ==========
 TARGET_BOOTLOADER_BOARD_NAME := tb8786p1_64_k510_wifi
 TARGET_NO_BOOTLOADER := true
 BOARD_BOOTLOADER_HEADER_VERSION := 4
 
-# ========== AB 分区配置 ==========
 AB_OTA_UPDATER := true
 AB_OTA_PARTITIONS := boot vendor_boot dtbo vbmeta vbmeta_system vbmeta_vendor init_boot tee logo super
 BOARD_USES_VIRTUAL_AB := false
@@ -37,11 +32,9 @@ BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
 BOARD_FLASH_BLOCK_SIZE := 4096
 TARGET_USES_MKE2FS := true
 
-# ========== 动态分区配置 ==========
 BOARD_DYNAMIC_PARTITIONS := true
 BOARD_DYNAMIC_PARTITIONS_CONFIG := $(DEVICE_PATH)/dynamic_partitions_opts.xml
 
-# ========== 分区大小配置 ==========
 BOARD_BOOTIMAGE_PARTITION_SIZE := 0x2000000          
 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 0x4000000   
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 0x37C6CF8000
@@ -53,48 +46,39 @@ BOARD_VBMETAIMAGE_PARTITION_SIZE := 0x800000
 BOARD_TEEIMAGE_PARTITION_SIZE := 0x600000
 BOARD_LOGOIMAGE_PARTITION_SIZE := 0x900000
 
-# ========== 超级分区组配置 ==========
 BOARD_SUPER_PARTITION_GROUPS := zyb_dynamic_partitions
 BOARD_ZYB_DYNAMIC_PARTITIONS_SIZE := 0x280000000
 BOARD_ZYB_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product system_ext
 BOARD_BUILD_SUPER_IMAGE_BY_DEFAULT := true
 
-# ========== 内核配置 ==========
 TARGET_FORCE_PREBUILT_KERNEL := true
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 TW_IGNORE_KERNEL_REPLACE := true
 
-# boot.img 已经包含 DTB，不需要额外添加
 BOARD_INCLUDE_DTB_IN_BOOTIMG := false
 
-# ========== 内核命令行 ==========
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user
 
-# ========== VENDOR BOOT 核心配置 ==========
 BOARD_VENDOR_BOOT := true
 BOARD_USES_VENDOR_BOOT := true
 TW_BUILD_VENDOR_BOOT := true
 
-# vendor_boot ramdisk 配置 - 基于实际解包
 BOARD_VENDOR_RAMDISK_TYPE := gzip          
 BOARD_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
 TW_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
 TW_VENDOR_BOOT_RAMDISK_KEEP_SIZE := true
 
-# vendor_boot DTB 配置 - 基于实际大小
 BOARD_VENDOR_BOOT_DTB_SIZE := 159397       
 BOARD_VENDOR_BOOT_PAGESIZE := 4096
 BOARD_VENDOR_RAMDISK_RECOVERY := true
 
-# ========== mkbootimg 参数 ==========
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTLOADER_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_VENDOR_BOOT_PAGESIZE)
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset 0x4000000
 BOARD_MKBOOTIMG_ARGS += --tags_offset 0x00000100
 BOARD_MKBOOTIMG_ARGS += --dtb_offset 0x1c000000
 
-# ========== 文件系统类型 ==========
 BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
@@ -103,29 +87,21 @@ BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
-# ========== 分区挂载路径 ==========
 TARGET_COPY_OUT_VENDOR := vendor
 TARGET_COPY_OUT_PRODUCT := product
 TARGET_COPY_OUT_SYSTEM_EXT := system_ext
 
-# ========== Recovery 配置 ==========
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
 BOARD_USES_RECOVERY_AS_BOOT := false
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x4000000
 TARGET_RECOVERY_DEVICE := tb8786p1_64_k510_wifi
 
-# ========== AB分区 Recovery 配置 ==========
-# 对于AB分区设备，不需要独立recovery分区
-# recovery功能集成在boot.img或vendor_boot.img中
 TARGET_NO_RECOVERY := true
 
-# ========== 预编译 Recovery Ramdisk ==========
-# 直接从原厂提取，避免编译问题
 TARGET_PREBUILT_RECOVERY_RAMDISK := $(DEVICE_PATH)/prebuilt/recovery_ramdisk.gz
 TARGET_RECOVERY_DENSITY := mdpi
 
-# ========== TWRP 屏幕配置 ==========
 TW_SCREEN_WIDTH := 1200
 TW_SCREEN_HEIGHT := 1920
 TW_ROTATE_SCREEN := false
@@ -136,7 +112,6 @@ TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
 TW_MAX_BRIGHTNESS := 255
 TW_DEFAULT_BRIGHTNESS := 150
 
-# ========== TWRP 功能配置 ==========
 TW_MTK := true
 TW_DEVICE_ARCH := arm64
 TW_INCLUDE_LIBRESETPROP := true
@@ -160,33 +135,29 @@ BOARD_SUPPORTS_FLASH_FROM_STORAGE := true
 RECOVERY_SDCARD_ON_DATA := true
 BOARD_HAS_NO_SELECT_BUTTON := true
 
-# ========== RAMDISK 处理 ==========
 BOARD_RAMDISK_USE_LZ4 := false
 TW_HAS_KERNEL_FOR_RECOVERY := true
 BOARD_KERNEL_COMPRESSION := gzip
 BOARD_RAMDISK_COMPRESSION := gzip
 
-# ========== 版本信息 - 从boot.img精确提取 ==========
 TARGET_BOOT_DEVICE := tb8786p1_64_k510_wifi
 
-# ========== AVB 配置 ==========
 BOARD_AVB_ENABLE := false
 BOARD_AVB_ALGORITHM := NONE
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 2
 
-# ========== SELinux 策略 ==========
 BOARD_SEPOLICY_DIRS := \
     $(DEVICE_PATH)/sepolicy \
     device/mediatek/sepolicy
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS := $(DEVICE_PATH)/sepolicy/public
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS := $(DEVICE_PATH)/sepolicy/private
 
-# ========== DTB/DTBO 配置 ==========
+# ========== DTB/DTBO 閰嶇疆 ==========
 TW_INCLUDE_RECOVERY_DTBO := true
 BOARD_INCLUDE_DTB_IN_RECOVERY_IMAGE := true
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/dtb/mt6768.dtb
 
-# ========== 硬件功能 ==========
+# ========== 纭欢鍔熻兘 ==========
 BOARD_HAS_TEE := true
 BOARD_HAS_LOGO := true
 
