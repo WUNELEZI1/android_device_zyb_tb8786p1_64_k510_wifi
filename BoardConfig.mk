@@ -81,6 +81,7 @@ BOARD_VENDOR_RAMDISK_TYPE := gzip
 BOARD_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
 TW_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
 TW_VENDOR_BOOT_RAMDISK_KEEP_SIZE := true
+
 # vendor_boot DTB 配置 - 基于实际大小
 BOARD_VENDOR_BOOT_DTB_SIZE := 159397       
 BOARD_VENDOR_BOOT_PAGESIZE := 4096
@@ -113,6 +114,16 @@ TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
 BOARD_USES_RECOVERY_AS_BOOT := false
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x4000000
 TARGET_RECOVERY_DEVICE := tb8786p1_64_k510_wifi
+
+# ========== AB分区 Recovery 配置 ==========
+# 对于AB分区设备，不需要独立recovery分区
+# recovery功能集成在boot.img或vendor_boot.img中
+TARGET_NO_RECOVERY := true
+
+# ========== 预编译 Recovery Ramdisk ==========
+# 直接从原厂提取，避免编译问题
+TARGET_PREBUILT_RECOVERY_RAMDISK := $(DEVICE_PATH)/prebuilt/recovery_ramdisk.gz
+TARGET_RECOVERY_DENSITY := mdpi
 
 # ========== TWRP 屏幕配置 ==========
 TW_SCREEN_WIDTH := 1200

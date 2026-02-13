@@ -2,11 +2,7 @@ TW_THEME := portrait_mdpi
 TW_SCREEN_WIDTH := 1200
 TW_SCREEN_HEIGHT := 1920
 TW_BUILD_VENDOR_BOOT := true
-TW_NO_BUILD_RECOVERY_IMAGE := false
-
-# [!删除!] TWRP-14 专用标志
-# TW_SUPPORT_VENDOR_BOOT := true
-# TW_SUPPORT_BOOT_HEADER_V4 := true
+TW_NO_BUILD_RECOVERY_IMAGE := true  # [!] AB分区设备不需要独立recovery
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, device/zyb/tb8786p1_64_k510_wifi/BoardConfig.mk)
@@ -20,10 +16,10 @@ PRODUCT_MODEL := ZPD1321
 PRODUCT_MANUFACTURER := ZYB
 
 # ========== 版本配置 (TWRP-12.1/Android 12) ==========
-PRODUCT_PLATFORM_VERSION := 12        # [!14 → 12!]
-PRODUCT_PLATFORM_SDK_VERSION := 31   # [!34 → 31!]
+PRODUCT_PLATFORM_VERSION := 12
+PRODUCT_PLATFORM_SDK_VERSION := 31
 PRODUCT_PLATFORM_VERSION_LAST_STABLE := 12
-PRODUCT_SHIPPING_API_LEVEL := 31     # [!34 → 31!]
+PRODUCT_SHIPPING_API_LEVEL := 31
 PRODUCT_SECURITY_PATCH := 2024-09-05
 PRODUCT_VENDOR_SECURITY_PATCH := 2024-09-05
 
@@ -39,15 +35,15 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.product.model=ZPD1321 \
     ro.product.manufacturer=ZYB \
     ro.bootimage.build.id=SP1A.210812.016 \
-    ro.bootimage.build.version.sdk=31 \     # [!34 → 31!]
-    ro.bootimage.build.version.release=12 \ # [!14 → 12!]
+    ro.bootimage.build.version.sdk=31 \
+    ro.bootimage.build.version.release=12 \
     ro.build.version.security_patch=2024-09-05 \
     ro.build.fingerprint=$(PRODUCT_BUILD_FINGERPRINT) \
     ro.sf.lcd_density=320 \
     ro.zygote=zygote64_32 \
     ro.dynamic_partitions=true \
-    ro.vndk.version=31 \                   # [!34 → 31!]
-    ro.first_api_level=31                 # [!34 → 31!]
+    ro.vndk.version=31 \
+    ro.first_api_level=31
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilt/Image.gz-dtb:kernel \
@@ -58,9 +54,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_DEVICE=tb8786p1_64_k510_wifi \
     PRODUCT_NAME=twrp_tb8786p1_64_k510_wifi \
-    PLATFORM_VERSION=12 \             
+    PLATFORM_VERSION=12 \
     SECURITY_PATCH=2024-09-05 \
-    FIRST_API_LEVEL=31 \               
-    VNDK_VERSION=31 \                 
+    FIRST_API_LEVEL=31 \
+    VNDK_VERSION=31 \
     ROOT_MANAGER=1 \
     TW_DEVICE_VERSION=3.7.0-zyb
