@@ -1,0 +1,4 @@
+作业帮学习机P50之TWRP设备树
+从AiBangOS4.3.0提取的
+也不知道为什么init_boot是空文件
+看起来像Android14但实际是Android12
