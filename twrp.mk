@@ -23,8 +23,3 @@ TW_VENDOR_BOOT_RAMDISK_TYPE := gzip
 TW_VENDOR_BOOT_RAMDISK_COMPRESSION := gzip
 
 TW_IGNORE_KERNEL_REPLACE := true
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.twrp.version=3.7.0-zyb \
-    ro.twrp.build.date=$(shell date +%Y%m%d) \
-    ro.build.fingerprint=$(PRODUCT_BUILD_FINGERPRINT)
